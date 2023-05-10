@@ -41,6 +41,20 @@ const newTask = Task(
   false
 );
 
-taskList.push(newTask);
+const otherTask = Task(
+  "Casa",
+  "Roupa",
+  "Estendelas",
+  "Concluído",
+  "date?",
+  2,
+  "nhenhenhe",
+  true
+);
 
-export { taskList };
+taskList.push(newTask);
+taskList.push(otherTask);
+
+const projects = ["Estudos", "Trabalho", "Casa"];
+
+export { taskList, projects };

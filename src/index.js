@@ -1,3 +1,4 @@
-import { printTasks } from "./print";
+import { printTasks, printForm } from "./print";
 
+printForm();
 printTasks();
