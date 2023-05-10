@@ -1,26 +1,121 @@
-import { taskList, projects } from "./script";
+import { taskList, projectList } from "./script";
 
-const createForm = function () {
+const createHeader = function () {
+  const container = document.createElement("header");
+
+  const burgerButton = document.createElement("div");
+  const burger = document.createElement("span");
+  burger.classList.add("material-icons");
+  burger.textContent = "menu";
+  burgerButton.appendChild(burger);
+
+  const title = document.createElement("h1");
+  title.classList.add("title");
+  title.textContent = "Minhas Tarefas";
+
+  container.appendChild(burgerButton);
+  container.appendChild(title);
+
+  return container;
+};
+
+const createSidebar = function () {
   const container = document.createElement("div");
+  container.classList.add("sidebar");
 
-  // ---Projeto
+  const home = document.createElement("div");
+  home.classList.add("navigation");
+  home.id = "home";
+  home.textContent = "Principal";
+
+  const today = document.createElement("div");
+  today.classList.add("navigation");
+  today.id = "today";
+  today.textContent = "Hoje";
+
+  const week = document.createElement("div");
+  week.classList.add("navigation");
+  week.id = "week";
+  week.textContent = "Esta semana";
+
+  const projects = document.createElement("div");
+  projects.classList.add("navigation");
+  projects.id = "projects";
+  const list = document.createElement("ul");
+  projectList.forEach((project) => {
+    const item = document.createElement("li");
+    item.textContent = project;
+    list.appendChild(item);
+    //adicionar funções de navegação entre projetos
+  });
+  projects.appendChild(list);
+
+  //adicionar função para criação de novo projeto
+  const newProject = document.createElement("div");
+  newProject.id = "new-project";
+  const addButton = document.createElement("button");
+  addButton.textContent = "+";
+  addButton.classList.add("add-button");
+  const newProjectLabel = document.createElement("span");
+  newProjectLabel.textContent = "Novo Projeto";
+  newProject.appendChild(addButton);
+  newProject.appendChild(newProjectLabel);
+
+  projects.appendChild(newProject);
+
+  container.appendChild(home);
+  container.appendChild(today);
+  container.appendChild(week);
+  container.appendChild(projects);
+
+  return container;
+};
+
+const createProjectForm = function () {
+  const container = document.createElement("div");
+  container.classList.add("new-project-form");
+
   const projectLabel = document.createElement("label");
   projectLabel.for = "project";
-  projectLabel.textContent = "Projeto: ";
+  projectLabel.textContent = "Nome do projeto: ";
 
   const project = document.createElement("input");
   project.id = "project";
   project.name = "project";
-  project.setAttribute("list", "projects-list");
 
-  const projectList = document.createElement("datalist");
-  projectList.id = "projects-list";
-  // Adicionar array com a lista de projetos
-  projects.forEach((project) => {
-    const option = document.createElement("option");
-    option.value = project;
-    projectList.appendChild(option);
-  });
+  const button = document.createElement("button");
+  button.id = "create-project";
+  button.textContent = "Criar projeto";
+
+  container.appendChild(projectLabel);
+  container.appendChild(project);
+  container.appendChild(button);
+
+  return container;
+};
+
+const createForm = function () {
+  const container = document.createElement("div");
+  container.classList.add("new-task-form");
+
+  // ---Projeto
+
+  // const projectLabel = document.createElement("label");
+  // projectLabel.for = "project";
+  // projectLabel.textContent = "Projeto: ";
+
+  // const project = document.createElement("input");
+  // project.id = "project";
+  // project.name = "project";
+  // project.setAttribute("list", "projects-list");
+
+  // const projectList = document.createElement("datalist");
+  // projectList.id = "projects-list";
+  // projects.forEach((project) => {
+  //   const option = document.createElement("option");
+  //   option.value = project;
+  //   projectList.appendChild(option);
+  // });
 
   // --- Título da tarefa
   const titleLabel = document.createElement("label");
@@ -77,10 +172,16 @@ const createForm = function () {
   notes.name = "description";
   notes.rows = 4;
 
+  //--- Submit
+
+  const button = document.createElement("button");
+  button.id = "add-new-task";
+  button.textContent = "Adicionar tarefa";
+
   // Append:
-  container.appendChild(projectLabel);
-  container.appendChild(project);
-  container.appendChild(projectList);
+  // container.appendChild(projectLabel);
+  // container.appendChild(project);
+  // container.appendChild(projectList);
 
   container.appendChild(titleLabel);
   container.appendChild(title);
@@ -96,6 +197,8 @@ const createForm = function () {
 
   container.appendChild(notesLabel);
   container.appendChild(notes);
+
+  container.appendChild(button);
 
   return container;
 };
