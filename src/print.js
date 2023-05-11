@@ -1,4 +1,4 @@
-import { taskList, projectList } from "./script";
+import { projects, newProject } from "./script";
 
 const createHeader = function () {
   const container = document.createElement("header");
@@ -38,35 +38,37 @@ const createSidebar = function () {
   week.id = "week";
   week.textContent = "Esta semana";
 
-  const projects = document.createElement("div");
-  projects.classList.add("navigation");
-  projects.id = "projects";
+  const projectList = document.createElement("div");
+  projectList.classList.add("navigation");
+  projectList.id = "projects";
   const list = document.createElement("ul");
-  projectList.forEach((project) => {
+  projects.forEach((project) => {
     const item = document.createElement("li");
-    item.textContent = project;
+    item.textContent = project.name;
     list.appendChild(item);
     //adicionar funções de navegação entre projetos
   });
-  projects.appendChild(list);
+  projectList.appendChild(list);
 
-  //adicionar função para criação de novo projeto
-  const newProject = document.createElement("div");
-  newProject.id = "new-project";
+  const addNewProject = document.createElement("div");
+  addNewProject.id = "new-project";
   const addButton = document.createElement("button");
   addButton.textContent = "+";
   addButton.classList.add("add-button");
   const newProjectLabel = document.createElement("span");
   newProjectLabel.textContent = "Novo Projeto";
-  newProject.appendChild(addButton);
-  newProject.appendChild(newProjectLabel);
+  addNewProject.appendChild(addButton);
+  addNewProject.appendChild(newProjectLabel);
 
-  projects.appendChild(newProject);
+  //adicionar função para criação de novo projeto
+  addNewProject.addEventListener("click", () => {});
+
+  projectList.appendChild(addNewProject);
 
   container.appendChild(home);
   container.appendChild(today);
   container.appendChild(week);
-  container.appendChild(projects);
+  container.appendChild(projectList);
 
   return container;
 };
@@ -86,6 +88,11 @@ const createProjectForm = function () {
   const button = document.createElement("button");
   button.id = "create-project";
   button.textContent = "Criar projeto";
+  button.addEventListener("click", () => {
+    newProject(project.value);
+    project.textContent = "";
+    printMain(); // trocar por outra função depois
+  });
 
   container.appendChild(projectLabel);
   container.appendChild(project);
@@ -250,4 +257,16 @@ const printTasks = () => {
   });
 };
 
-export { printTasks, printForm };
+const printMain = () => {
+  const body = document.querySelector("body");
+
+  const shadow = document.createElement("div");
+  shadow.id = "shadow";
+  shadow.appendChild(createForm());
+  shadow.appendChild(createProjectForm());
+
+  body.appendChild(shadow);
+  body.appendChild(createHeader());
+  body.appendChild(createSidebar());
+};
+export { printMain };
