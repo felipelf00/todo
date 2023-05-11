@@ -44,21 +44,22 @@ const createSidebar = function () {
   projectList.classList.add("navigation");
   projectList.id = "projects";
   projectList.textContent = "Projetos: ";
-  const list = document.createElement("ul");
 
-  projects.forEach((project) => {
-    const item = document.createElement("li");
-    item.textContent = project.name;
-    item.addEventListener("click", () => {
-      const main = document.querySelector("main");
-      main.innerHTML = "";
-      activeProjectIndex = projects.indexOf(project);
-      main.appendChild(displayProject(projects[activeProjectIndex]));
-    });
-    list.appendChild(item);
-  });
+  // const list = document.createElement("ul");
 
-  projectList.appendChild(list);
+  // projects.forEach((project) => {
+  //   const item = document.createElement("li");
+  //   item.textContent = project.name;
+  //   item.addEventListener("click", () => {
+  //     const main = document.querySelector("main");
+  //     main.innerHTML = "";
+  //     activeProjectIndex = projects.indexOf(project);
+  //     main.appendChild(displayProject(projects[activeProjectIndex]));
+  //   });
+  //   list.appendChild(item);
+  // });
+
+  projectList.appendChild(loadProjects());
 
   const addNewProject = document.createElement("div");
   addNewProject.id = "new-project";
@@ -86,6 +87,24 @@ const createSidebar = function () {
   return container;
 };
 
+const loadProjects = function () {
+  const list = document.createElement("ul");
+
+  projects.forEach((project) => {
+    const item = document.createElement("li");
+    item.textContent = project.name;
+    item.addEventListener("click", () => {
+      const main = document.querySelector("main");
+      main.innerHTML = "";
+      activeProjectIndex = projects.indexOf(project);
+      main.appendChild(displayProject(projects[activeProjectIndex]));
+    });
+    list.appendChild(item);
+  });
+
+  return list;
+};
+
 let activeProjectIndex;
 
 const createProjectForm = function () {
@@ -108,7 +127,10 @@ const createProjectForm = function () {
   button.addEventListener("click", () => {
     newProject(project.value);
     project.textContent = "";
-    printMain(); // trocar por outra função mais específica
+    document.querySelector("#projects").innerHTML = "";
+    document.querySelector("#projects").appendChild(loadProjects());
+    container.classList.add("hidden");
+    document.querySelector("#shadow").classList.add("hidden");
   });
 
   container.appendChild(projectLabel);
@@ -303,7 +325,7 @@ const clearPage = () => {
   body.innerHTML = "";
 };
 
-const printMain = () => {
+const printPage = () => {
   clearPage();
 
   const body = document.querySelector("body");
@@ -328,4 +350,4 @@ const printMain = () => {
   body.appendChild(createSidebar());
   body.appendChild(main);
 };
-export { printMain };
+export { printPage };

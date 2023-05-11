@@ -1,4 +1,4 @@
-import { printMain } from "./print";
+import { printPage } from "./print";
 import "./style.css";
 
-printMain();
+printPage();
