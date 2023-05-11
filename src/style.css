@@ -2,6 +2,7 @@
   --background-color: white;
   --text-color: black;
   --button-color: yellow;
+  --header-color: green;
 }
 
 body {
@@ -52,4 +53,52 @@ label {
   background-color: var(--background-color);
   border-radius: 15px;
   padding: 50px;
+}
+
+header {
+  background-color: var(--header-color);
+  position: fixed;
+  width: 100%;
+}
+
+#title {
+  text-align: center;
+  margin: 0;
+}
+
+.burger {
+  font-size: 2rem;
+  position: fixed;
+  padding: 4px;
+  z-index: 5;
+}
+
+#main {
+  padding-top: 40px;
+}
+
+.sidebar {
+  position: fixed;
+  left: -100%;
+  transition: 400ms;
+  z-index: 3;
+  top: 40px;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.navigation {
+  font-size: 1.4rem;
+}
+
+.navigation > ul,
+.navigation > div {
+  font-size: 1.1rem;
+  padding-left: 20px;
+}
+
+ul {
+  list-style-type: none;
 }

@@ -3,17 +3,19 @@ import { projects, newProject, Task } from "./script";
 const createHeader = function () {
   const container = document.createElement("header");
 
-  const burgerButton = document.createElement("div");
-  const burger = document.createElement("span");
+  const burger = document.createElement("i");
   burger.classList.add("material-icons");
+  burger.classList.add("burger");
   burger.textContent = "menu";
-  burgerButton.appendChild(burger);
+  burger.addEventListener("click", () => {
+    document.querySelector(".sidebar").classList.toggle("active");
+  });
 
   const title = document.createElement("h1");
-  title.classList.add("title");
+  title.id = "title";
   title.textContent = "Minhas Tarefas";
 
-  container.appendChild(burgerButton);
+  container.appendChild(burger);
   container.appendChild(title);
 
   return container;
@@ -41,6 +43,7 @@ const createSidebar = function () {
   const projectList = document.createElement("div");
   projectList.classList.add("navigation");
   projectList.id = "projects";
+  projectList.textContent = "Projetos: ";
   const list = document.createElement("ul");
 
   projects.forEach((project) => {
