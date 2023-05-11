@@ -60,8 +60,11 @@ const createSidebar = function () {
   addNewProject.appendChild(addButton);
   addNewProject.appendChild(newProjectLabel);
 
-  //adicionar função para criação de novo projeto
-  addNewProject.addEventListener("click", () => {});
+  // Mostrar formulário de novo projeto
+  addNewProject.addEventListener("click", () => {
+    document.querySelector("#new-project-form").classList.remove("hidden");
+    document.querySelector("#shadow").classList.remove("hidden");
+  });
 
   projectList.appendChild(addNewProject);
 
@@ -75,7 +78,9 @@ const createSidebar = function () {
 
 const createProjectForm = function () {
   const container = document.createElement("div");
-  container.classList.add("new-project-form");
+  container.id = "new-project-form";
+  container.classList.add("form");
+  container.classList.add("hidden");
 
   const projectLabel = document.createElement("label");
   projectLabel.for = "project";
@@ -103,26 +108,9 @@ const createProjectForm = function () {
 
 const createForm = function () {
   const container = document.createElement("div");
-  container.classList.add("new-task-form");
-
-  // ---Projeto
-
-  // const projectLabel = document.createElement("label");
-  // projectLabel.for = "project";
-  // projectLabel.textContent = "Projeto: ";
-
-  // const project = document.createElement("input");
-  // project.id = "project";
-  // project.name = "project";
-  // project.setAttribute("list", "projects-list");
-
-  // const projectList = document.createElement("datalist");
-  // projectList.id = "projects-list";
-  // projects.forEach((project) => {
-  //   const option = document.createElement("option");
-  //   option.value = project;
-  //   projectList.appendChild(option);
-  // });
+  container.id = "new-task-form";
+  container.classList.add("form");
+  container.classList.add("hidden");
 
   // --- Título da tarefa
   const titleLabel = document.createElement("label");
@@ -257,14 +245,28 @@ const printTasks = () => {
   });
 };
 
+const clearPage = () => {
+  const body = document.querySelector("body");
+  body.innerHTML = "";
+};
+
 const printMain = () => {
+  clearPage();
+
   const body = document.querySelector("body");
 
   const shadow = document.createElement("div");
   shadow.id = "shadow";
-  shadow.appendChild(createForm());
-  shadow.appendChild(createProjectForm());
+  shadow.classList.add("hidden");
+  shadow.addEventListener("click", () => {
+    shadow.classList.add("hidden");
+    document.querySelectorAll(".form").forEach((element) => {
+      element.classList.add("hidden");
+    });
+  });
 
+  body.appendChild(createForm());
+  body.appendChild(createProjectForm());
   body.appendChild(shadow);
   body.appendChild(createHeader());
   body.appendChild(createSidebar());

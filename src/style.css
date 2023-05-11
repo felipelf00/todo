@@ -1,0 +1,55 @@
+:root {
+  --background-color: white;
+  --text-color: black;
+  --button-color: yellow;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  box-sizing: border-box;
+}
+
+input,
+select,
+textarea {
+  width: 150px;
+  padding: 0;
+  margin: 0;
+}
+
+label {
+  display: block;
+}
+
+#shadow {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hidden {
+  display: none;
+}
+
+.form {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--background-color);
+  border-radius: 15px;
+  padding: 50px;
+}
