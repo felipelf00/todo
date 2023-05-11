@@ -1,4 +1,4 @@
-import { projects, newProject } from "./script";
+import { projects, newProject, Task } from "./script";
 
 const createHeader = function () {
   const container = document.createElement("header");
@@ -42,12 +42,19 @@ const createSidebar = function () {
   projectList.classList.add("navigation");
   projectList.id = "projects";
   const list = document.createElement("ul");
+
   projects.forEach((project) => {
     const item = document.createElement("li");
     item.textContent = project.name;
+    item.addEventListener("click", () => {
+      const main = document.querySelector("main");
+      main.innerHTML = "";
+      activeProjectIndex = projects.indexOf(project);
+      main.appendChild(displayProject(projects[activeProjectIndex]));
+    });
     list.appendChild(item);
-    //adicionar funções de navegação entre projetos
   });
+
   projectList.appendChild(list);
 
   const addNewProject = document.createElement("div");
@@ -76,6 +83,8 @@ const createSidebar = function () {
   return container;
 };
 
+let activeProjectIndex;
+
 const createProjectForm = function () {
   const container = document.createElement("div");
   container.id = "new-project-form";
@@ -96,7 +105,7 @@ const createProjectForm = function () {
   button.addEventListener("click", () => {
     newProject(project.value);
     project.textContent = "";
-    printMain(); // trocar por outra função depois
+    printMain(); // trocar por outra função mais específica
   });
 
   container.appendChild(projectLabel);
@@ -106,7 +115,38 @@ const createProjectForm = function () {
   return container;
 };
 
-const createForm = function () {
+const displayProject = function (project) {
+  const container = document.createElement("div");
+  container.id = "project-container";
+
+  const projectTitle = document.createElement("h2");
+  projectTitle.textContent = project.name;
+
+  const addNewTask = document.createElement("div");
+  addNewTask.id = "new-task";
+  const addButton = document.createElement("button");
+  addButton.textContent = "+";
+  addButton.classList.add("add-button");
+  const newTaskLabel = document.createElement("span");
+  newTaskLabel.textContent = "Nova Tarefa";
+  addNewTask.appendChild(addButton);
+  addNewTask.appendChild(newTaskLabel);
+
+  addNewTask.addEventListener("click", () => {
+    document.querySelector("#new-task-form").classList.remove("hidden");
+    document.querySelector("#shadow").classList.remove("hidden");
+  });
+
+  container.appendChild(projectTitle);
+  container.appendChild(addNewTask);
+  project.tasks.forEach((task) => {
+    container.appendChild(displayTasks(task));
+  });
+
+  return container;
+};
+
+const createTaskForm = function () {
   const container = document.createElement("div");
   container.id = "new-task-form";
   container.classList.add("form");
@@ -173,10 +213,23 @@ const createForm = function () {
   button.id = "add-new-task";
   button.textContent = "Adicionar tarefa";
 
-  // Append:
-  // container.appendChild(projectLabel);
-  // container.appendChild(project);
-  // container.appendChild(projectList);
+  button.addEventListener("click", () => {
+    projects[activeProjectIndex].tasks.push(
+      Task(
+        title.value,
+        description.value,
+        due.value,
+        priority.value,
+        notes.value
+      )
+    );
+    const lastTaskIndex = projects[activeProjectIndex].tasks.length - 1;
+    document
+      .querySelector("#project-container")
+      .appendChild(
+        displayTasks(projects[activeProjectIndex].tasks[lastTaskIndex])
+      );
+  });
 
   container.appendChild(titleLabel);
   container.appendChild(title);
@@ -198,11 +251,8 @@ const createForm = function () {
   return container;
 };
 
-const createTaskDisplay = function (task) {
+const displayTasks = function (task) {
   const container = document.createElement("div");
-
-  const project = document.createElement("div");
-  project.textContent = task.project;
 
   const title = document.createElement("h2");
   title.textContent = task.title;
@@ -219,15 +269,15 @@ const createTaskDisplay = function (task) {
   const notes = document.createElement("div");
   notes.textContent = task.notes;
 
-  const state = document.createElement("div");
-  state.textContent = task.state;
+  // const state = document.createElement("div");
+  // state.textContent = task.state;
 
   // const complete = document.createElement("div")
 
-  container.appendChild(project);
+  // container.appendChild(project);
   container.appendChild(title);
   container.appendChild(description);
-  container.appendChild(state);
+  // container.appendChild(state);
   container.appendChild(due);
   container.appendChild(priority);
   container.appendChild(notes);
@@ -236,14 +286,14 @@ const createTaskDisplay = function (task) {
 };
 
 const printForm = () => {
-  document.querySelector("body").appendChild(createForm());
+  document.querySelector("body").appendChild(createTaskForm());
 };
 
-const printTasks = () => {
-  taskList.forEach((task) => {
-    document.querySelector("body").appendChild(createTaskDisplay(task));
-  });
-};
+// const printTasks = () => {
+//   taskList.forEach((task) => {
+//     document.querySelector("body").appendChild(displayTasks(task));
+//   });
+// };
 
 const clearPage = () => {
   const body = document.querySelector("body");
@@ -265,10 +315,14 @@ const printMain = () => {
     });
   });
 
-  body.appendChild(createForm());
+  const main = document.createElement("main");
+  main.id = "main";
+
+  body.appendChild(createTaskForm());
   body.appendChild(createProjectForm());
   body.appendChild(shadow);
   body.appendChild(createHeader());
   body.appendChild(createSidebar());
+  body.appendChild(main);
 };
 export { printMain };

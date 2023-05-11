@@ -59,4 +59,4 @@ const Task = (title, description, due, priority, notes, complete) => {
 // taskList.push(newTask);
 // taskList.push(otherTask);
 
-export { projects, newProject };
+export { projects, newProject, Task };
