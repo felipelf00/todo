@@ -45,21 +45,12 @@ const createSidebar = function () {
   projectList.id = "projects";
   projectList.textContent = "Projetos: ";
 
-  // const list = document.createElement("ul");
+  const list = document.createElement("ul");
+  projectList.appendChild(list);
 
-  // projects.forEach((project) => {
-  //   const item = document.createElement("li");
-  //   item.textContent = project.name;
-  //   item.addEventListener("click", () => {
-  //     const main = document.querySelector("main");
-  //     main.innerHTML = "";
-  //     activeProjectIndex = projects.indexOf(project);
-  //     main.appendChild(displayProject(projects[activeProjectIndex]));
-  //   });
-  //   list.appendChild(item);
-  // });
-
-  projectList.appendChild(loadProjects());
+  document.addEventListener("DOMContentLoaded", function () {
+    loadProjects();
+  });
 
   const addNewProject = document.createElement("div");
   addNewProject.id = "new-project";
@@ -88,8 +79,9 @@ const createSidebar = function () {
 };
 
 const loadProjects = function () {
-  const list = document.createElement("ul");
-
+  // const list = document.createElement("ul");
+  const list = document.querySelector("#projects ul");
+  list.innerHTML = "";
   projects.forEach((project) => {
     const item = document.createElement("li");
     item.textContent = project.name;
@@ -126,9 +118,9 @@ const createProjectForm = function () {
   button.textContent = "Criar projeto";
   button.addEventListener("click", () => {
     newProject(project.value);
-    project.textContent = "";
-    document.querySelector("#projects").innerHTML = "";
-    document.querySelector("#projects").appendChild(loadProjects());
+    project.value = "";
+    console.log("hi");
+    loadProjects();
     container.classList.add("hidden");
     document.querySelector("#shadow").classList.add("hidden");
   });
