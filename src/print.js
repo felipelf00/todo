@@ -70,6 +70,16 @@ const createSidebar = function () {
 
   projectList.appendChild(addNewProject);
 
+  // Pra funcionar tem que dar jeito de o main ocupar todo o espaço pra poder ser clicado
+  document.addEventListener("DOMContentLoaded", () => {
+    const main = document.querySelector("#main");
+    main.addEventListener("click", () => {
+      if (container.classList.contains("active")) {
+        container.classList.remove("active");
+      }
+    });
+  });
+
   container.appendChild(home);
   container.appendChild(today);
   container.appendChild(week);
@@ -246,6 +256,8 @@ const createTaskForm = function () {
       .appendChild(
         displayTasks(projects[activeProjectIndex].tasks[lastTaskIndex])
       );
+    container.classList.add("hidden");
+    document.querySelector("#shadow").classList.add("hidden");
   });
 
   container.appendChild(titleLabel);

@@ -80,6 +80,10 @@ header {
 
 #main {
   padding-top: 40px;
+  text-align: center;
+  height: 100vh;
+  height: 100dvh;
+  /* Tem que fazer esse elemento ocupar o espaço todo pra dar certo desativar a sidebar quando clicar aqui */
 }
 
 .sidebar {
