@@ -137,10 +137,12 @@ const createProjectForm = function () {
       newProject(project.value);
       project.value = "";
       loadProjects();
+      container.classList.add("hidden");
+      document.querySelector("#shadow").classList.add("hidden");
+    } else {
+      project.setCustomValidity("Campo obrigatório");
+      project.reportValidity();
     }
-
-    container.classList.add("hidden");
-    document.querySelector("#shadow").classList.add("hidden");
   });
 
   container.appendChild(projectLabel);
@@ -323,6 +325,10 @@ const displayTasks = function (task) {
 
   const check = document.createElement("input");
   check.type = "checkbox";
+
+  check.addEventListener("change", () => {
+    check.previousElementSibling.classList.toggle("completed");
+  });
 
   taskHeader.appendChild(expander);
   taskHeader.appendChild(title);
