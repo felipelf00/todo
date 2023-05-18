@@ -30,7 +30,7 @@ input:not([type="checkbox"]),
 select,
 textarea {
   width: 250px;
-  padding: 0;
+  padding: 0 5px;
   margin: 0;
 }
 
@@ -69,8 +69,8 @@ header {
 }
 
 #title {
-  text-align: center;
   margin: 0;
+  text-align: center;
 }
 
 .burger {
@@ -146,6 +146,7 @@ ul {
   transition: all 250ms;
   width: min(500px, 90vw);
   margin: auto;
+  margin-bottom: 7px;
   background-color: var(--sidebar-color);
   border-radius: 10px;
   padding: 8px;

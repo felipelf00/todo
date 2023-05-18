@@ -101,10 +101,11 @@ const loadProjects = function () {
     item.textContent = project.name;
     item.classList.add("clickable");
     item.addEventListener("click", () => {
-      const main = document.querySelector("main");
-      main.innerHTML = "";
-      activeProjectIndex = projects.indexOf(project);
-      main.appendChild(displayProject(projects[activeProjectIndex]));
+      // const main = document.querySelector("main");
+      // main.innerHTML = "";
+      // activeProjectIndex = projects.indexOf(project);
+      // main.appendChild(displayProject(projects[activeProjectIndex]));
+      selectProject(project);
     });
     list.appendChild(item);
   });
@@ -113,6 +114,13 @@ const loadProjects = function () {
 };
 
 let activeProjectIndex;
+
+const selectProject = function (project) {
+  const main = document.querySelector("main");
+  main.innerHTML = "";
+  activeProjectIndex = projects.indexOf(project);
+  main.appendChild(displayProject(projects[activeProjectIndex]));
+};
 
 const createProjectForm = function () {
   const container = document.createElement("div");
@@ -134,7 +142,8 @@ const createProjectForm = function () {
   button.textContent = "Criar projeto";
   button.addEventListener("click", () => {
     if (project.value !== "") {
-      newProject(project.value);
+      // newProject(project.value);
+      selectProject(newProject(project.value));
       project.value = "";
       loadProjects();
       container.classList.add("hidden");
@@ -192,12 +201,12 @@ const createTaskForm = function () {
 
   // --- Título da tarefa
   const titleLabel = document.createElement("label");
-  titleLabel.for = "title";
+  titleLabel.for = "task-title";
   titleLabel.textContent = "Tarefa: ";
 
   const title = document.createElement("input");
-  title.id = "title";
-  title.name = "title";
+  title.id = "task-title";
+  title.name = "task-title";
   title.type = "text";
 
   //--- Descrição

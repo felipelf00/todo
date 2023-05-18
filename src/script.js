@@ -10,7 +10,9 @@ const Project = function (name) {
 };
 
 const newProject = (name) => {
-  projects.push(Project(name));
+  const project = Project(name);
+  projects.push(project);
+  return project;
 };
 
 const Task = (title, description, due, priority, notes, complete) => {
