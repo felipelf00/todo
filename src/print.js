@@ -6,6 +6,7 @@ const createHeader = function () {
   const burger = document.createElement("i");
   burger.classList.add("material-icons");
   burger.classList.add("burger");
+  burger.classList.add("clickable");
   burger.textContent = "menu";
   burger.addEventListener("click", () => {
     document.querySelector(".sidebar").classList.toggle("active");
@@ -27,16 +28,19 @@ const createSidebar = function () {
 
   const home = document.createElement("div");
   home.classList.add("navigation");
+  home.classList.add("clickable");
   home.id = "home";
   home.textContent = "Principal";
 
   const today = document.createElement("div");
   today.classList.add("navigation");
+  today.classList.add("clickable");
   today.id = "today";
   today.textContent = "Hoje";
 
   const week = document.createElement("div");
   week.classList.add("navigation");
+  week.classList.add("clickable");
   week.id = "week";
   week.textContent = "Esta semana";
 
@@ -54,6 +58,7 @@ const createSidebar = function () {
 
   const addNewProject = document.createElement("div");
   addNewProject.id = "new-project";
+  addNewProject.classList.add("clickable");
   const addButton = document.createElement("button");
   addButton.textContent = "+";
   addButton.classList.add("add-button");
@@ -70,7 +75,6 @@ const createSidebar = function () {
 
   projectList.appendChild(addNewProject);
 
-  // Pra funcionar tem que dar jeito de o main ocupar todo o espaço pra poder ser clicado
   document.addEventListener("DOMContentLoaded", () => {
     const main = document.querySelector("#main");
     main.addEventListener("click", () => {
@@ -95,6 +99,7 @@ const loadProjects = function () {
   projects.forEach((project) => {
     const item = document.createElement("li");
     item.textContent = project.name;
+    item.classList.add("clickable");
     item.addEventListener("click", () => {
       const main = document.querySelector("main");
       main.innerHTML = "";
@@ -125,12 +130,15 @@ const createProjectForm = function () {
 
   const button = document.createElement("button");
   button.id = "create-project";
+  button.classList.add("clickable");
   button.textContent = "Criar projeto";
   button.addEventListener("click", () => {
-    newProject(project.value);
-    project.value = "";
-    console.log("hi");
-    loadProjects();
+    if (project.value !== "") {
+      newProject(project.value);
+      project.value = "";
+      loadProjects();
+    }
+
     container.classList.add("hidden");
     document.querySelector("#shadow").classList.add("hidden");
   });
@@ -151,6 +159,7 @@ const displayProject = function (project) {
 
   const addNewTask = document.createElement("div");
   addNewTask.id = "new-task";
+  addNewTask.classList.add("clickable");
   const addButton = document.createElement("button");
   addButton.textContent = "+";
   addButton.classList.add("add-button");
@@ -238,6 +247,7 @@ const createTaskForm = function () {
 
   const button = document.createElement("button");
   button.id = "add-new-task";
+  button.classList.add("clickable");
   button.textContent = "Adicionar tarefa";
 
   button.addEventListener("click", () => {
@@ -258,6 +268,12 @@ const createTaskForm = function () {
       );
     container.classList.add("hidden");
     document.querySelector("#shadow").classList.add("hidden");
+
+    title.value = "";
+    description.value = "";
+    due.value = "";
+    priority.value = "";
+    notes.value = "";
   });
 
   container.appendChild(titleLabel);
@@ -282,9 +298,38 @@ const createTaskForm = function () {
 
 const displayTasks = function (task) {
   const container = document.createElement("div");
+  container.classList.add("task");
 
-  const title = document.createElement("h2");
+  const taskHeader = document.createElement("div");
+  taskHeader.classList.add("task-header");
+
+  const expander = document.createElement("span");
+  expander.classList.add("material-icons");
+  expander.classList.add("clickable");
+  expander.textContent = "expand_more";
+
+  expander.addEventListener("click", () => {
+    container.classList.toggle("expanded");
+    expander.classList.toggle("clicked");
+  });
+
+  const title = document.createElement("div");
   title.textContent = task.title;
+
+  title.addEventListener("click", () => {
+    container.classList.toggle("expanded");
+    expander.classList.toggle("clicked");
+  });
+
+  const check = document.createElement("input");
+  check.type = "checkbox";
+
+  taskHeader.appendChild(expander);
+  taskHeader.appendChild(title);
+  taskHeader.appendChild(check);
+
+  const taskBody = document.createElement("div");
+  taskBody.classList.add("task-body");
 
   const description = document.createElement("div");
   description.textContent = task.description;
@@ -298,18 +343,13 @@ const displayTasks = function (task) {
   const notes = document.createElement("div");
   notes.textContent = task.notes;
 
-  // const state = document.createElement("div");
-  // state.textContent = task.state;
+  taskBody.appendChild(description);
+  taskBody.appendChild(due);
+  taskBody.appendChild(priority);
+  taskBody.appendChild(notes);
 
-  // const complete = document.createElement("div")
-
-  // container.appendChild(project);
-  container.appendChild(title);
-  container.appendChild(description);
-  // container.appendChild(state);
-  container.appendChild(due);
-  container.appendChild(priority);
-  container.appendChild(notes);
+  container.appendChild(taskHeader);
+  container.appendChild(taskBody);
 
   return container;
 };
