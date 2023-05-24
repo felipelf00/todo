@@ -46,6 +46,9 @@ const createSidebar = function () {
   week.classList.add("clickable");
   week.id = "week";
   week.textContent = "Esta semana";
+  week.addEventListener("click", () => {
+    displayThisWeek();
+  });
 
   const projectList = document.createElement("div");
   projectList.classList.add("navigation");
@@ -239,6 +242,9 @@ const createTaskForm = function () {
 
   const priority = document.createElement("select");
   priority.name = "priority";
+  const blank = document.createElement("option");
+  blank.value = "";
+  priority.appendChild(blank);
 
   for (let i = 1; i <= 5; i++) {
     const option = document.createElement("option");
@@ -355,10 +361,11 @@ const displayTask = function (task) {
   description.textContent = task.description;
 
   const due = document.createElement("div");
-  due.textContent = task.due;
+  const formattedDate = task.due.split("-").reverse().join("/");
+  due.textContent = `Prazo: ${formattedDate}`;
 
   const priority = document.createElement("div");
-  priority.textContent = task.priority;
+  priority.textContent = `Prioridade: ${task.priority}`;
 
   const notes = document.createElement("div");
   notes.textContent = task.notes;
@@ -379,54 +386,97 @@ const printForm = () => {
   document.querySelector("body").appendChild(createTaskForm());
 };
 
-// const displayToday = function () {
-//   const main = document.querySelector("#main");
-//   main.innerHTML = "";
-
-//   const currentDate = new Date();
-//   currentDate.setHours(0, 0, 0, 0);
-
-//   projects.forEach((project) => {
-//     project.tasks.forEach((task) => {
-//       const taskDueDate = new Date(task.due);
-//       taskDueDate.setHours(0, 0, 0, 0);
-//       const isDueToday =
-//         currentDate.toDateString() === taskDueDate.toDateString();
-//       if (isDueToday) {
-//         main.appendChild(displayTask(task));
-//       }
-//     });
-//   });
-// };
-
 const displayToday = function () {
   const main = document.querySelector("#main");
   main.innerHTML = "";
 
+  const title = document.createElement("h1");
+  title.textContent = "Tarefas para hoje:";
+
+  main.appendChild(title);
+
   const currentDate = new Date();
 
   currentDate.setHours(0, 0, 0, 0);
-  console.log(`current date: ${currentDate}`);
 
   projects.forEach((project) => {
-    project.tasks.forEach((task) => {
-      // const parts = task.due.split("-");
-      // const taskDueDate = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+    let projectIsDisplayed = false;
 
+    project.tasks.forEach((task) => {
       const taskDueDate = new Date(task.due);
-      console.log(`${task.title}: ${taskDueDate}`);
 
       const isDueToday =
         currentDate.getUTCFullYear() === taskDueDate.getUTCFullYear() &&
         currentDate.getUTCMonth() === taskDueDate.getUTCMonth() &&
         currentDate.getUTCDate() === taskDueDate.getUTCDate();
-      // const isDueToday =
-      //   currentDate.toDateString() === taskDueDate.toDateString();
+
       if (isDueToday) {
+        if (!projectIsDisplayed) {
+          const projectName = document.createElement("h2");
+          projectName.textContent = project.name;
+          main.appendChild(projectName);
+          projectIsDisplayed = true;
+        }
         main.appendChild(displayTask(task));
       }
     });
   });
+};
+
+const displayThisWeek = function () {
+  const main = document.querySelector("#main");
+  main.innerHTML = "";
+
+  const title = document.createElement("h1");
+  title.textContent = "Tarefas para essa semana:";
+
+  main.appendChild(title);
+
+  projects.forEach((project) => {
+    let projectIsDisplayed = false;
+
+    project.tasks.forEach((task) => {
+      const taskDueDate = new Date(task.due);
+      const utcDate = new Date(
+        taskDueDate.getUTCFullYear(),
+        taskDueDate.getUTCMonth(),
+        taskDueDate.getUTCDate()
+      );
+
+      if (isThisWeek(utcDate)) {
+        if (!projectIsDisplayed) {
+          const projectName = document.createElement("h2");
+          projectName.textContent = project.name;
+          main.appendChild(projectName);
+          projectIsDisplayed = true;
+        }
+        main.appendChild(displayTask(task));
+      }
+    });
+  });
+};
+
+const isThisWeek = function (date) {
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+
+  console.log(`current: ${currentDate}`);
+
+  const firstDay = new Date(
+    currentDate.setDate(currentDate.getDate() - currentDate.getDay())
+  );
+  // const lastDay = new Date(currentDate.setDate(currentDate.getDate() + 6));
+  const lastDay = new Date(
+    firstDay.getFullYear(),
+    firstDay.getMonth(),
+    firstDay.getDate() + 6
+  );
+
+  console.log(`date: ${date}`);
+  console.log(`first: ${firstDay}`);
+  console.log(`last: ${lastDay}`);
+
+  return date >= firstDay && date <= lastDay;
 };
 
 const clearPage = () => {
