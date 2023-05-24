@@ -34,31 +34,4 @@ const Task = (title, description, due, priority, notes, complete) => {
   };
 };
 
-// const taskList = [];
-
-// const newTask = Task(
-//   "Studies",
-//   "Do this stuff",
-//   "Create todo list",
-//   "In progress",
-//   "date?",
-//   3,
-//   "blablabla",
-//   false
-// );
-
-// const otherTask = Task(
-//   "Casa",
-//   "Roupa",
-//   "Estendelas",
-//   "Concluído",
-//   "date?",
-//   2,
-//   "nhenhenhe",
-//   true
-// );
-
-// taskList.push(newTask);
-// taskList.push(otherTask);
-
 export { projects, newProject, Task };

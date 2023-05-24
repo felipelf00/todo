@@ -37,6 +37,9 @@ const createSidebar = function () {
   today.classList.add("clickable");
   today.id = "today";
   today.textContent = "Hoje";
+  today.addEventListener("click", () => {
+    displayToday();
+  });
 
   const week = document.createElement("div");
   week.classList.add("navigation");
@@ -187,7 +190,7 @@ const displayProject = function (project) {
   container.appendChild(projectTitle);
   container.appendChild(addNewTask);
   project.tasks.forEach((task) => {
-    container.appendChild(displayTasks(task));
+    container.appendChild(displayTask(task));
   });
 
   return container;
@@ -275,7 +278,7 @@ const createTaskForm = function () {
     document
       .querySelector("#project-container")
       .appendChild(
-        displayTasks(projects[activeProjectIndex].tasks[lastTaskIndex])
+        displayTask(projects[activeProjectIndex].tasks[lastTaskIndex])
       );
     container.classList.add("hidden");
     document.querySelector("#shadow").classList.add("hidden");
@@ -307,7 +310,9 @@ const createTaskForm = function () {
   return container;
 };
 
-const displayTasks = function (task) {
+const displayTask = function (task) {
+  console.log(`${task.title}: ${task.due}`);
+
   const container = document.createElement("div");
   container.classList.add("task");
 
@@ -369,15 +374,60 @@ const displayTasks = function (task) {
   return container;
 };
 
+// obsoleto?
 const printForm = () => {
   document.querySelector("body").appendChild(createTaskForm());
 };
 
-// const printTasks = () => {
-//   taskList.forEach((task) => {
-//     document.querySelector("body").appendChild(displayTasks(task));
+// const displayToday = function () {
+//   const main = document.querySelector("#main");
+//   main.innerHTML = "";
+
+//   const currentDate = new Date();
+//   currentDate.setHours(0, 0, 0, 0);
+
+//   projects.forEach((project) => {
+//     project.tasks.forEach((task) => {
+//       const taskDueDate = new Date(task.due);
+//       taskDueDate.setHours(0, 0, 0, 0);
+//       const isDueToday =
+//         currentDate.toDateString() === taskDueDate.toDateString();
+//       if (isDueToday) {
+//         main.appendChild(displayTask(task));
+//       }
+//     });
 //   });
 // };
+
+const displayToday = function () {
+  const main = document.querySelector("#main");
+  main.innerHTML = "";
+
+  const currentDate = new Date();
+
+  currentDate.setHours(0, 0, 0, 0);
+  console.log(`current date: ${currentDate}`);
+
+  projects.forEach((project) => {
+    project.tasks.forEach((task) => {
+      // const parts = task.due.split("-");
+      // const taskDueDate = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+
+      const taskDueDate = new Date(task.due);
+      console.log(`${task.title}: ${taskDueDate}`);
+
+      const isDueToday =
+        currentDate.getUTCFullYear() === taskDueDate.getUTCFullYear() &&
+        currentDate.getUTCMonth() === taskDueDate.getUTCMonth() &&
+        currentDate.getUTCDate() === taskDueDate.getUTCDate();
+      // const isDueToday =
+      //   currentDate.toDateString() === taskDueDate.toDateString();
+      if (isDueToday) {
+        main.appendChild(displayTask(task));
+      }
+    });
+  });
+};
 
 const clearPage = () => {
   const body = document.querySelector("body");
