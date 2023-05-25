@@ -521,11 +521,17 @@ const printPage = () => {
   const main = document.createElement("main");
   main.id = "main";
 
+  const container = document.createElement("div");
+  container.appendChild(createSidebar());
+  container.appendChild(main);
+  container.classList.add("body-container");
+
   body.appendChild(createTaskForm());
   body.appendChild(createProjectForm());
   body.appendChild(shadow);
   body.appendChild(createHeader());
-  body.appendChild(createSidebar());
-  body.appendChild(main);
+  // body.appendChild(createSidebar());
+  // body.appendChild(main);
+  body.appendChild(container);
 };
 export { printPage };

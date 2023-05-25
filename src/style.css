@@ -14,7 +14,15 @@ body {
   padding: 0;
   box-sizing: border-box;
   font-family: "Patua One", cursive;
+  font-weight: lighter;
   color: var(--text-color-dark);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: inherit;
 }
 
 button,
@@ -66,11 +74,15 @@ header {
   position: fixed;
   width: 100%;
   color: var(--background-color);
+  box-shadow: 0 2px var(--text-color-dark);
+  z-index: 4;
 }
 
 #title {
   margin: 0;
   text-align: center;
+  text-shadow: -1px 1px var(--text-color-dark);
+  font-weight: 600;
 }
 
 .burger {
@@ -133,9 +145,10 @@ li.clickable.active::before {
   background-color: var(--sidebar-color);
   color: var(--text-color-dark);
   padding: 20px;
-  /* 
-  display: flex;
-  flex-direction: column; */
+  box-shadow: 2px 0px var(--shadow-color);
+
+  max-width: 230px;
+  overflow-wrap: break-word;
 }
 
 .sidebar.active {
@@ -225,4 +238,22 @@ ul {
 .completed {
   text-decoration: line-through;
   opacity: 0.4;
+}
+
+@media only screen and (min-width: 600px) {
+  .burger {
+    display: none;
+  }
+  /* .body-container {
+    display: grid;
+    grid-template-columns: 200px auto;
+  } */
+  .sidebar {
+    /* grid-column: 1 / 2; */
+    left: 0;
+    width: clamp(164px, 17vw, 200px);
+  }
+  #main {
+    /* grid-column: 2 / 3; */
+  }
 }
