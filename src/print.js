@@ -31,6 +31,13 @@ const createSidebar = function () {
   home.classList.add("clickable");
   home.id = "home";
   home.textContent = "Principal";
+  home.addEventListener("click", () => {
+    const active = document.querySelectorAll(".navigation.active");
+    active.forEach((element) => {
+      element.classList.remove("active");
+    });
+    home.classList.add("active");
+  });
 
   const today = document.createElement("div");
   today.classList.add("navigation");
@@ -39,6 +46,12 @@ const createSidebar = function () {
   today.textContent = "Hoje";
   today.addEventListener("click", () => {
     displayToday();
+
+    const active = document.querySelectorAll(".navigation.active");
+    active.forEach((element) => {
+      element.classList.remove("active");
+    });
+    today.classList.add("active");
   });
 
   const week = document.createElement("div");
@@ -48,6 +61,12 @@ const createSidebar = function () {
   week.textContent = "Esta semana";
   week.addEventListener("click", () => {
     displayThisWeek();
+
+    const active = document.querySelectorAll(".navigation.active");
+    active.forEach((element) => {
+      element.classList.remove("active");
+    });
+    week.classList.add("active");
   });
 
   const projectList = document.createElement("div");
@@ -99,7 +118,6 @@ const createSidebar = function () {
 };
 
 const loadProjects = function () {
-  // const list = document.createElement("ul");
   const list = document.querySelector("#projects ul");
   list.innerHTML = "";
   projects.forEach((project) => {
@@ -107,11 +125,12 @@ const loadProjects = function () {
     item.textContent = project.name;
     item.classList.add("clickable");
     item.addEventListener("click", () => {
-      // const main = document.querySelector("main");
-      // main.innerHTML = "";
-      // activeProjectIndex = projects.indexOf(project);
-      // main.appendChild(displayProject(projects[activeProjectIndex]));
       selectProject(project);
+      const active = document.querySelectorAll(".navigation li.active");
+      active.forEach((element) => {
+        element.classList.remove("active");
+      });
+      item.classList.add("active");
     });
     list.appendChild(item);
   });

@@ -98,7 +98,9 @@ li.clickable {
 }
 
 .navigation.clickable:hover,
-li.clickable:hover {
+li.clickable:hover,
+.navigation.clickable.active,
+li.clickable.active {
   padding-left: 10px;
 }
 
@@ -114,7 +116,9 @@ li.clickable::before {
 }
 
 .navigation.clickable:hover::before,
-li.clickable:hover::before {
+li.clickable:hover::before,
+.navigation.clickable.active::before,
+li.clickable.active::before {
   content: "•";
   opacity: 1;
 }
