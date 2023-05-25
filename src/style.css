@@ -91,6 +91,34 @@ header {
   cursor: pointer;
 }
 
+.navigation.clickable,
+li.clickable {
+  position: relative;
+  transition: padding-left 300ms cubic-bezier(0.18, 0.89, 0.51, 1.06);
+}
+
+.navigation.clickable:hover,
+li.clickable:hover {
+  padding-left: 10px;
+}
+
+.navigation.clickable::before,
+li.clickable::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 300ms;
+}
+
+.navigation.clickable:hover::before,
+li.clickable:hover::before {
+  content: "•";
+  opacity: 1;
+}
+
 .sidebar {
   position: fixed;
   height: 100%;
@@ -101,6 +129,9 @@ header {
   background-color: var(--sidebar-color);
   color: var(--text-color-dark);
   padding: 20px;
+  /* 
+  display: flex;
+  flex-direction: column; */
 }
 
 .sidebar.active {
@@ -109,6 +140,8 @@ header {
 
 .navigation {
   font-size: 1.4rem;
+  margin-bottom: 4px;
+  /* position: relative; */
 }
 
 .navigation > ul,
