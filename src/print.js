@@ -1,4 +1,13 @@
-import { projects, newProject, Task } from "./script";
+import {
+  projects,
+  newProject,
+  Task,
+  storeProject,
+  getProjectsFromStorage,
+} from "./script";
+
+//test storage
+// getProjectsFromStorage();
 
 const createHeader = function () {
   const container = document.createElement("header");
@@ -167,8 +176,12 @@ const createProjectForm = function () {
   button.textContent = "Criar projeto";
   button.addEventListener("click", () => {
     if (project.value !== "") {
-      // newProject(project.value);
-      selectProject(newProject(project.value));
+      const currentProject = newProject(project.value);
+      selectProject(currentProject);
+
+      // test storage
+      storeProject(currentProject);
+
       project.value = "";
       loadProjects();
       container.classList.add("hidden");
@@ -289,6 +302,7 @@ const createTaskForm = function () {
   button.classList.add("clickable");
   button.textContent = "Adicionar tarefa";
 
+  // --- Add task to project object
   button.addEventListener("click", () => {
     projects[activeProjectIndex].tasks.push(
       Task(
@@ -299,6 +313,10 @@ const createTaskForm = function () {
         notes.value
       )
     );
+
+    // test storage
+    storeProject(projects[activeProjectIndex]);
+
     const lastTaskIndex = projects[activeProjectIndex].tasks.length - 1;
     document
       .querySelector("#project-container")

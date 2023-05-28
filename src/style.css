@@ -251,7 +251,7 @@ ul {
   .sidebar {
     /* grid-column: 1 / 2; */
     left: 0;
-    width: clamp(164px, 17vw, 200px);
+    max-width: clamp(164px, 17vw, 200px);
   }
   #main {
     /* grid-column: 2 / 3; */

@@ -5,7 +5,6 @@ const Project = function (name) {
   const addTask = (title, description, due, priority, notes, complete) => {
     tasks.push(Task(title, description, due, priority, notes, complete));
   };
-
   return { name, tasks, addTask };
 };
 
@@ -34,4 +33,78 @@ const Task = (title, description, due, priority, notes, complete) => {
   };
 };
 
-export { projects, newProject, Task };
+function storageAvailable(type) {
+  let storage;
+  try {
+    storage = window[type];
+    const x = "__storage_test__";
+    storage.setItem(x, x);
+    storage.removeItem(x);
+    return true;
+  } catch (e) {
+    return (
+      e instanceof DOMException &&
+      // everything except Firefox
+      (e.code === 22 ||
+        // Firefox
+        e.code === 1014 ||
+        // test name field too, because code might not be present
+        // everything except Firefox
+        e.name === "QuotaExceededError" ||
+        // Firefox
+        e.name === "NS_ERROR_DOM_QUOTA_REACHED") &&
+      // acknowledge QuotaExceededError only if there's something already stored
+      storage &&
+      storage.length !== 0
+    );
+  }
+}
+
+let storageIsAvailable = storageAvailable("localStorage");
+
+const storeProject = function (project) {
+  if (storageIsAvailable) {
+    localStorage.setItem(project.name, JSON.stringify(project.tasks));
+    console.log(localStorage.getItem(project.name));
+  }
+};
+
+// const getProjectsFromStorage = function () {
+//   for (var project in localStorage) {
+//     if (typeof localStorage[project] === "string") {
+//       projects.push(newProject(localStorage[project]));
+//     }
+//   }
+// };
+
+const getProjectsFromStorage = function () {
+  console.log("get projects function running");
+  for (var i = 0; i < localStorage.length; i++) {
+    const projectName = localStorage.key(i);
+    const tasksString = localStorage.getItem(projectName);
+
+    console.log(`project name: ${projectName}`);
+
+    if (tasksString) {
+      const tasks = JSON.parse(tasksString);
+      const project = newProject(projectName);
+
+      tasks.forEach((task) => {
+        project.addTask(
+          task.title,
+          task.description,
+          task.due,
+          task.priority,
+          task.notes,
+          task.complete
+        );
+
+        console.log("task added");
+      });
+    }
+  }
+};
+
+getProjectsFromStorage();
+
+export { projects, newProject, Task, storeProject, getProjectsFromStorage };
