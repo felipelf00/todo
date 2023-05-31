@@ -78,12 +78,9 @@ const storeProject = function (project) {
 // };
 
 const getProjectsFromStorage = function () {
-  console.log("get projects function running");
   for (var i = 0; i < localStorage.length; i++) {
     const projectName = localStorage.key(i);
     const tasksString = localStorage.getItem(projectName);
-
-    console.log(`project name: ${projectName}`);
 
     if (tasksString) {
       const tasks = JSON.parse(tasksString);
@@ -98,8 +95,6 @@ const getProjectsFromStorage = function () {
           task.notes,
           task.complete
         );
-
-        console.log("task added");
       });
     }
   }
@@ -107,4 +102,4 @@ const getProjectsFromStorage = function () {
 
 getProjectsFromStorage();
 
-export { projects, newProject, Task, storeProject, getProjectsFromStorage };
+export { projects, newProject, Task, storeProject };

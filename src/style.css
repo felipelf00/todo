@@ -2,7 +2,9 @@
 
 :root {
   /* --background-color: #f6f1f1; */
-  --background-color: #fff9f6;
+  /* --background-color: #fff9f6; */
+  /* --background-color: #fffbf8; */
+  --background-color: #faf9f8;
   --text-color-dark: #132d3a;
   --sidebar-color: #f4efeb;
   --header-color: #19a7ce;
@@ -81,7 +83,7 @@ header {
 #title {
   margin: 0;
   text-align: center;
-  text-shadow: -1px 1px var(--text-color-dark);
+  text-shadow: -1px 1px 4px var(--text-color-dark);
   font-weight: 600;
 }
 
@@ -97,6 +99,7 @@ header {
   text-align: center;
   height: 100vh;
   height: 100dvh;
+  background-color: var(--background-color);
 }
 
 .clickable {
@@ -190,6 +193,51 @@ ul {
   display: block;
 }
 
+.project-card {
+  display: grid;
+  grid-template-rows: auto 0fr;
+  width: min(520px, 92vw);
+  margin: auto;
+}
+
+.project-header {
+  grid-row: 1;
+  display: flex;
+  /* justify-content: center; */
+  justify-content: space-between;
+  padding: 8px;
+  width: 60%;
+  margin: auto;
+}
+
+.project-header:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.card-title {
+  font-size: 1.1rem;
+}
+
+.counter {
+  width: 24px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background-color: var(--header-color);
+  color: var(--background-color);
+}
+
+.project-body,
+.task-body {
+  grid-row: 2;
+  overflow: hidden;
+}
+
+.project-header span,
+.task-header span {
+  transition: transform 300ms;
+}
+
 .task {
   display: grid;
   grid-template-rows: auto 0fr;
@@ -214,18 +262,14 @@ ul {
   justify-content: space-between;
 }
 
-.task-header span {
-  transition: transform 300ms;
-}
-
 .task-header div {
   width: 100%;
 }
 
-.task-body {
+/* .task-body {
   grid-row: 2;
   overflow: hidden;
-}
+} */
 
 .expanded {
   grid-template-rows: auto 1fr;

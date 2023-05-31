@@ -1,13 +1,4 @@
-import {
-  projects,
-  newProject,
-  Task,
-  storeProject,
-  getProjectsFromStorage,
-} from "./script";
-
-//test storage
-// getProjectsFromStorage();
+import { projects, newProject, Task, storeProject } from "./script";
 
 const createHeader = function () {
   const container = document.createElement("header");
@@ -41,6 +32,8 @@ const createSidebar = function () {
   home.id = "home";
   home.textContent = "Principal";
   home.addEventListener("click", () => {
+    displayHome();
+
     const active = document.querySelectorAll(".navigation.active");
     active.forEach((element) => {
       element.classList.remove("active");
@@ -354,8 +347,6 @@ const createTaskForm = function () {
 };
 
 const displayTask = function (task) {
-  console.log(`${task.title}: ${task.due}`);
-
   const container = document.createElement("div");
   container.classList.add("task");
 
@@ -419,8 +410,80 @@ const displayTask = function (task) {
 };
 
 // obsoleto?
-const printForm = () => {
-  document.querySelector("body").appendChild(createTaskForm());
+// const printForm = () => {
+//   document.querySelector("body").appendChild(createTaskForm());
+// };
+
+const displayProjectCard = function (project) {
+  const container = document.createElement("div");
+  container.classList.add("project-card");
+  container.classList.add("expanded");
+
+  const projectHeader = document.createElement("div");
+  projectHeader.classList.add("project-header");
+
+  const expander = document.createElement("span");
+  expander.classList.add("material-icons");
+  expander.classList.add("clickable");
+  expander.classList.add("clicked");
+  expander.textContent = "expand_more";
+
+  expander.addEventListener("click", () => {
+    container.classList.toggle("expanded");
+    expander.classList.toggle("clicked");
+  });
+
+  const title = document.createElement("span");
+  title.textContent = project.name;
+  title.classList.add("card-title");
+  title.addEventListener("click", () => {
+    container.classList.toggle("expanded");
+    expander.classList.toggle("clicked");
+  });
+
+  const counter = document.createElement("span");
+  counter.classList.add("counter");
+  counter.textContent = "X"; //add counter function
+
+  const projectBody = document.createElement("div");
+  projectBody.classList.add("project-body");
+
+  projectHeader.appendChild(expander);
+  projectHeader.appendChild(title);
+  projectHeader.appendChild(counter);
+  container.appendChild(projectHeader);
+  container.appendChild(projectBody);
+
+  return container;
+};
+
+const displayHome = function () {
+  const main = document.querySelector("#main");
+  main.innerHTML = "";
+
+  const title = document.createElement("h1");
+  title.textContent = "Todas as tarefas:";
+  main.appendChild(title);
+
+  projects.forEach((project) => {
+    let projectIsDisplayed = false;
+
+    project.tasks.forEach((task) => {
+      // if (project.tasks) {
+      const projectCard = displayProjectCard(project);
+      if (!projectIsDisplayed) {
+        // const projectName = document.createElement("h2");
+        // projectName.textContent = project.name;
+        // main.appendChild(projectName);
+
+        main.appendChild(projectCard);
+
+        projectIsDisplayed = true;
+      }
+      projectCard.lastElementChild.appendChild(displayTask(task));
+      // }
+    });
+  });
 };
 
 const displayToday = function () {
@@ -497,8 +560,6 @@ const isThisWeek = function (date) {
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
 
-  console.log(`current: ${currentDate}`);
-
   const firstDay = new Date(
     currentDate.setDate(currentDate.getDate() - currentDate.getDay())
   );
@@ -508,10 +569,6 @@ const isThisWeek = function (date) {
     firstDay.getMonth(),
     firstDay.getDate() + 6
   );
-
-  console.log(`date: ${date}`);
-  console.log(`first: ${firstDay}`);
-  console.log(`last: ${lastDay}`);
 
   return date >= firstDay && date <= lastDay;
 };
