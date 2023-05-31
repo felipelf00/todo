@@ -166,8 +166,13 @@ li.clickable.active::before {
 
 .navigation > ul,
 .navigation > div {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   padding-left: 20px;
+}
+
+.navigation li {
+  display: flex;
+  justify-content: space-between;
 }
 
 ul {
@@ -196,7 +201,7 @@ ul {
 .project-card {
   display: grid;
   grid-template-rows: auto 0fr;
-  width: min(520px, 92vw);
+  width: min(520px, 100vw);
   margin: auto;
 }
 
@@ -208,6 +213,7 @@ ul {
   padding: 8px;
   width: 60%;
   margin: auto;
+  margin-bottom: 7px;
 }
 
 .project-header:hover {
@@ -216,7 +222,7 @@ ul {
 }
 
 .card-title {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .counter {
@@ -225,6 +231,8 @@ ul {
   border-radius: 50%;
   background-color: var(--header-color);
   color: var(--background-color);
+  display: flex;
+  justify-content: center;
 }
 
 .project-body,

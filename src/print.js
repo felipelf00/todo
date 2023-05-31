@@ -126,6 +126,12 @@ const loadProjects = function () {
     const item = document.createElement("li");
     item.textContent = project.name;
     item.classList.add("clickable");
+
+    const counter = document.createElement("span");
+    counter.classList.add("counter");
+    counter.textContent = countTasks(project);
+    item.appendChild(counter);
+
     item.addEventListener("click", () => {
       selectProject(project);
       const active = document.querySelectorAll(".navigation li.active");
@@ -409,11 +415,6 @@ const displayTask = function (task) {
   return container;
 };
 
-// obsoleto?
-// const printForm = () => {
-//   document.querySelector("body").appendChild(createTaskForm());
-// };
-
 const displayProjectCard = function (project) {
   const container = document.createElement("div");
   container.classList.add("project-card");
@@ -421,29 +422,25 @@ const displayProjectCard = function (project) {
 
   const projectHeader = document.createElement("div");
   projectHeader.classList.add("project-header");
+  projectHeader.classList.add("clickable");
 
-  const expander = document.createElement("span");
-  expander.classList.add("material-icons");
-  expander.classList.add("clickable");
-  expander.classList.add("clicked");
-  expander.textContent = "expand_more";
-
-  expander.addEventListener("click", () => {
+  projectHeader.addEventListener("click", () => {
     container.classList.toggle("expanded");
     expander.classList.toggle("clicked");
   });
+
+  const expander = document.createElement("span");
+  expander.classList.add("material-icons");
+  expander.classList.add("clicked");
+  expander.textContent = "expand_more";
 
   const title = document.createElement("span");
   title.textContent = project.name;
   title.classList.add("card-title");
-  title.addEventListener("click", () => {
-    container.classList.toggle("expanded");
-    expander.classList.toggle("clicked");
-  });
 
   const counter = document.createElement("span");
   counter.classList.add("counter");
-  counter.textContent = "X"; //add counter function
+  counter.textContent = countTasks(project); // modificar para que não conte tarefas completadas
 
   const projectBody = document.createElement("div");
   projectBody.classList.add("project-body");
@@ -457,6 +454,10 @@ const displayProjectCard = function (project) {
   return container;
 };
 
+const countTasks = function (project) {
+  return project.tasks.length;
+};
+
 const displayHome = function () {
   const main = document.querySelector("#main");
   main.innerHTML = "";
@@ -467,21 +468,14 @@ const displayHome = function () {
 
   projects.forEach((project) => {
     let projectIsDisplayed = false;
+    const projectCard = displayProjectCard(project);
 
     project.tasks.forEach((task) => {
-      // if (project.tasks) {
-      const projectCard = displayProjectCard(project);
       if (!projectIsDisplayed) {
-        // const projectName = document.createElement("h2");
-        // projectName.textContent = project.name;
-        // main.appendChild(projectName);
-
         main.appendChild(projectCard);
-
         projectIsDisplayed = true;
       }
       projectCard.lastElementChild.appendChild(displayTask(task));
-      // }
     });
   });
 };
@@ -501,6 +495,7 @@ const displayToday = function () {
 
   projects.forEach((project) => {
     let projectIsDisplayed = false;
+    const projectCard = displayProjectCard(project);
 
     project.tasks.forEach((task) => {
       const taskDueDate = new Date(task.due);
@@ -514,10 +509,13 @@ const displayToday = function () {
         if (!projectIsDisplayed) {
           const projectName = document.createElement("h2");
           projectName.textContent = project.name;
-          main.appendChild(projectName);
+          // main.appendChild(projectName);
+          main.appendChild(projectCard);
+
           projectIsDisplayed = true;
         }
-        main.appendChild(displayTask(task));
+        // main.appendChild(displayTask(task));
+        projectCard.lastElementChild.appendChild(displayTask(task));
       }
     });
   });
@@ -534,6 +532,7 @@ const displayThisWeek = function () {
 
   projects.forEach((project) => {
     let projectIsDisplayed = false;
+    const projectCard = displayProjectCard(project);
 
     project.tasks.forEach((task) => {
       const taskDueDate = new Date(task.due);
@@ -547,10 +546,13 @@ const displayThisWeek = function () {
         if (!projectIsDisplayed) {
           const projectName = document.createElement("h2");
           projectName.textContent = project.name;
-          main.appendChild(projectName);
+          // main.appendChild(projectName);
+          main.appendChild(projectCard);
+
           projectIsDisplayed = true;
         }
-        main.appendChild(displayTask(task));
+        // main.appendChild(displayTask(task));
+        projectCard.lastElementChild.appendChild(displayTask(task));
       }
     });
   });
