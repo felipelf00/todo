@@ -224,7 +224,7 @@ const displayProject = function (project) {
   container.appendChild(projectTitle);
   container.appendChild(addNewTask);
   project.tasks.forEach((task) => {
-    container.appendChild(displayTask(task));
+    container.appendChild(displayTask(task, project));
   });
 
   return container;
@@ -320,7 +320,10 @@ const createTaskForm = function () {
     document
       .querySelector("#project-container")
       .appendChild(
-        displayTask(projects[activeProjectIndex].tasks[lastTaskIndex])
+        displayTask(
+          projects[activeProjectIndex].tasks[lastTaskIndex],
+          projects[activeProjectIndex]
+        )
       );
     container.classList.add("hidden");
     document.querySelector("#shadow").classList.add("hidden");
@@ -352,7 +355,7 @@ const createTaskForm = function () {
   return container;
 };
 
-const displayTask = function (task) {
+const displayTask = function (task, project) {
   const container = document.createElement("div");
   container.classList.add("task");
 
@@ -381,8 +384,18 @@ const displayTask = function (task) {
   check.type = "checkbox";
 
   check.addEventListener("change", () => {
-    check.previousElementSibling.classList.toggle("completed");
+    // check.previousElementSibling.classList.toggle("completed");
+    title.classList.toggle("completed");
+    task.toggleComplete();
+    console.log(project);
+    storeProject(project);
   });
+
+  if (task.complete) {
+    check.checked = true;
+    // check.previousElementSibling.classList.add("completed");
+    title.classList.add("completed");
+  }
 
   taskHeader.appendChild(expander);
   taskHeader.appendChild(title);
@@ -475,7 +488,7 @@ const displayHome = function () {
         main.appendChild(projectCard);
         projectIsDisplayed = true;
       }
-      projectCard.lastElementChild.appendChild(displayTask(task));
+      projectCard.lastElementChild.appendChild(displayTask(task, project));
     });
   });
 };
@@ -515,7 +528,7 @@ const displayToday = function () {
           projectIsDisplayed = true;
         }
         // main.appendChild(displayTask(task));
-        projectCard.lastElementChild.appendChild(displayTask(task));
+        projectCard.lastElementChild.appendChild(displayTask(task, project));
       }
     });
   });
@@ -552,7 +565,7 @@ const displayThisWeek = function () {
           projectIsDisplayed = true;
         }
         // main.appendChild(displayTask(task));
-        projectCard.lastElementChild.appendChild(displayTask(task));
+        projectCard.lastElementChild.appendChild(displayTask(task, project));
       }
     });
   });

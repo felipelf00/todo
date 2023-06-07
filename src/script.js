@@ -15,7 +15,7 @@ const newProject = (name) => {
 };
 
 const Task = (title, description, due, priority, notes, complete) => {
-  const toggleComplete = () => {
+  const toggleComplete = function () {
     if (!this.complete) {
       this.complete = true;
     } else {
