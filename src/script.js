@@ -3,7 +3,7 @@ const projects = [];
 const Project = function (name) {
   const tasks = [];
   const addTask = (title, description, due, priority, notes, complete) => {
-    tasks.push(Task(title, description, due, priority, notes, complete));
+    tasks.push(Task(title, description, due, priority, notes, complete, this));
   };
   return { name, tasks, addTask };
 };
@@ -14,7 +14,7 @@ const newProject = (name) => {
   return project;
 };
 
-const Task = (title, description, due, priority, notes, complete) => {
+const Task = (title, description, due, priority, notes, complete, project) => {
   const toggleComplete = function () {
     if (!this.complete) {
       this.complete = true;
@@ -65,7 +65,7 @@ let storageIsAvailable = storageAvailable("localStorage");
 const storeProject = function (project) {
   if (storageIsAvailable) {
     localStorage.setItem(project.name, JSON.stringify(project.tasks));
-    console.log(localStorage.getItem(project.name));
+    // console.log(localStorage.getItem(project.name));
   }
 };
 
