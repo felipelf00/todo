@@ -122,6 +122,7 @@ const createSidebar = function () {
 const loadProjects = function () {
   const list = document.querySelector("#projects ul");
   list.innerHTML = "";
+
   projects.forEach((project) => {
     const item = document.createElement("li");
     item.textContent = project.name;
@@ -134,22 +135,44 @@ const loadProjects = function () {
 
     item.addEventListener("click", () => {
       selectProject(project);
-      const active = document.querySelectorAll(".navigation li.active");
+      const activeProject = document.querySelectorAll(".navigation li.active");
+      activeProject.forEach((element) => {
+        element.classList.remove("active");
+      });
+
+      const active = document.querySelectorAll(".navigation.active");
       active.forEach((element) => {
         element.classList.remove("active");
       });
+
       item.classList.add("active");
     });
 
     project.tasks.forEach((task) => {
-      const taskCheckbox = document.querySelector(".task-checkbox");
-      taskCheckbox.addEventListener("change", () => {
-        counter.textContent = countTasks(project);
+      const main = document.querySelector("#main");
+      main.addEventListener("change", () => {
+        const taskCheckbox = document.querySelectorAll(".task-checkbox");
+        taskCheckbox.forEach((checkbox) => {
+          checkbox.addEventListener("change", () => {
+            counter.textContent = countTasks(project);
+          });
+        });
       });
     });
 
     list.appendChild(item);
   });
+
+  // const main = document.querySelector("#main");
+  // main.addEventListener("change", () => {
+  //   projects.forEach((project) => {
+  //     const projectItem = document.querySelector(
+  //       `#projects ul li:contains('${project.name}')`
+  //     );
+  //     const counter = projectItem.querySelector(".counter");
+  //     counter.textContent = countTasks(project);
+  //   });
+  // });
 
   return list;
 };
@@ -505,6 +528,12 @@ const displayHome = function () {
   active.forEach((element) => {
     element.classList.remove("active");
   });
+
+  const activeProjects = document.querySelectorAll(".navigation .active");
+  activeProjects.forEach((element) => {
+    element.classList.remove("active");
+  });
+
   home.classList.add("active");
 
   const title = document.createElement("h1");
@@ -534,6 +563,12 @@ const displayToday = function () {
   active.forEach((element) => {
     element.classList.remove("active");
   });
+
+  const activeProjects = document.querySelectorAll(".navigation .active");
+  activeProjects.forEach((element) => {
+    element.classList.remove("active");
+  });
+
   today.classList.add("active");
 
   const title = document.createElement("h1");
@@ -582,6 +617,12 @@ const displayThisWeek = function () {
   active.forEach((element) => {
     element.classList.remove("active");
   });
+
+  const activeProjects = document.querySelectorAll(".navigation .active");
+  activeProjects.forEach((element) => {
+    element.classList.remove("active");
+  });
+
   week.classList.add("active");
 
   const title = document.createElement("h1");
