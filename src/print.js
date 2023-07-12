@@ -33,13 +33,12 @@ const createSidebar = function () {
   home.textContent = "Principal";
   home.addEventListener("click", () => {
     displayHome();
-
-    // const active = document.querySelectorAll(".navigation.active");
-    // active.forEach((element) => {
-    //   element.classList.remove("active");
-    // });
-    // home.classList.add("active");
   });
+  // const counterHome = document.createElement("span");
+  // counterHome.classList.add("counter");
+  // counterHome.dataset.id = "global";
+  // counterHome.textContent = countTasks("global");
+  // home.appendChild(counterHome);
 
   const today = document.createElement("div");
   today.classList.add("navigation");
@@ -130,6 +129,7 @@ const loadProjects = function () {
 
     const counter = document.createElement("span");
     counter.classList.add("counter");
+    counter.dataset.id = projects.indexOf(project);
     counter.textContent = countTasks(project);
     item.appendChild(counter);
 
@@ -148,31 +148,20 @@ const loadProjects = function () {
       item.classList.add("active");
     });
 
-    project.tasks.forEach((task) => {
-      const main = document.querySelector("#main");
-      main.addEventListener("change", () => {
-        const taskCheckbox = document.querySelectorAll(".task-checkbox");
-        taskCheckbox.forEach((checkbox) => {
-          checkbox.addEventListener("change", () => {
-            counter.textContent = countTasks(project);
-          });
-        });
-      });
-    });
+    // project.tasks.forEach((task) => {
+    //   const main = document.querySelector("#main");
+    //   main.addEventListener("change", () => {
+    //     const taskCheckbox = document.querySelectorAll(".task-checkbox");
+    //     taskCheckbox.forEach((checkbox) => {
+    //       checkbox.addEventListener("change", () => {
+    //         counter.textContent = countTasks(project);
+    //       });
+    //     });
+    //   });
+    // });
 
     list.appendChild(item);
   });
-
-  // const main = document.querySelector("#main");
-  // main.addEventListener("change", () => {
-  //   projects.forEach((project) => {
-  //     const projectItem = document.querySelector(
-  //       `#projects ul li:contains('${project.name}')`
-  //     );
-  //     const counter = projectItem.querySelector(".counter");
-  //     counter.textContent = countTasks(project);
-  //   });
-  // });
 
   return list;
 };
@@ -414,17 +403,17 @@ const displayTask = function (task, project) {
   const check = document.createElement("input");
   check.type = "checkbox";
   check.classList.add("task-checkbox");
+  check.dataset.projectIndex = projects.indexOf(project); // maybe not necessary
 
   check.addEventListener("change", () => {
-    // check.previousElementSibling.classList.toggle("completed");
     title.classList.toggle("completed");
     task.toggleComplete();
     storeProject(project);
+    updateCounters();
   });
 
   if (task.complete) {
     check.checked = true;
-    // check.previousElementSibling.classList.add("completed");
     title.classList.add("completed");
   }
 
@@ -459,7 +448,7 @@ const displayTask = function (task, project) {
   return container;
 };
 
-const displayProjectCard = function (project) {
+const displayProjectCard = function (project, context) {
   const container = document.createElement("div");
   container.classList.add("project-card");
   container.classList.add("expanded");
@@ -484,7 +473,15 @@ const displayProjectCard = function (project) {
 
   const counter = document.createElement("span");
   counter.classList.add("counter");
-  counter.textContent = countTasks(project);
+  counter.dataset.id = projects.indexOf(project);
+
+  if (context === "today") {
+    counter.dataset.context = "today";
+  }
+  if (context === "thisWeek") {
+    counter.dataset.context = "thisWeek";
+  }
+  counter.textContent = countTasks(project, counter.dataset.context);
   // counter.textContent = project.tasks.filter((task) => !task.complete).length;
 
   const projectBody = document.createElement("div");
@@ -503,20 +500,6 @@ const displayProjectCard = function (project) {
   });
 
   return container;
-};
-
-const countTasks = function (project) {
-  // let counter = 0;
-  // console.log(project.tasks);
-  // for (var task of project.tasks) {
-  //   if (!task.complete) {
-  //     counter += 1;
-  //   } else {
-  //     console.log("task complete");
-  //   }
-  // }
-  return project.tasks.filter((task) => !task.complete).length;
-  // return counter;
 };
 
 const displayHome = function () {
@@ -576,36 +559,47 @@ const displayToday = function () {
 
   main.appendChild(title);
 
-  const currentDate = new Date();
+  // const currentDate = new Date();
 
-  currentDate.setHours(0, 0, 0, 0);
+  // currentDate.setHours(0, 0, 0, 0);
 
   projects.forEach((project) => {
     let projectIsDisplayed = false;
-    const projectCard = displayProjectCard(project);
+    const projectCard = displayProjectCard(project, "today");
 
     project.tasks.forEach((task) => {
-      const taskDueDate = new Date(task.due);
+      // const taskDueDate = new Date(task.due);
 
-      const isDueToday =
-        currentDate.getUTCFullYear() === taskDueDate.getUTCFullYear() &&
-        currentDate.getUTCMonth() === taskDueDate.getUTCMonth() &&
-        currentDate.getUTCDate() === taskDueDate.getUTCDate();
+      // const isDueToday =
+      //   currentDate.getUTCFullYear() === taskDueDate.getUTCFullYear() &&
+      //   currentDate.getUTCMonth() === taskDueDate.getUTCMonth() &&
+      //   currentDate.getUTCDate() === taskDueDate.getUTCDate();
 
-      if (isDueToday) {
+      if (isDueToday(task)) {
         if (!projectIsDisplayed) {
           const projectName = document.createElement("h2");
           projectName.textContent = project.name;
-          // main.appendChild(projectName);
           main.appendChild(projectCard);
 
           projectIsDisplayed = true;
         }
-        // main.appendChild(displayTask(task));
         projectCard.lastElementChild.appendChild(displayTask(task, project));
       }
     });
   });
+};
+
+const isDueToday = function (task) {
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+
+  const taskDueDate = new Date(task.due);
+
+  return (
+    currentDate.getUTCFullYear() === taskDueDate.getUTCFullYear() &&
+    currentDate.getUTCMonth() === taskDueDate.getUTCMonth() &&
+    currentDate.getUTCDate() === taskDueDate.getUTCDate()
+  );
 };
 
 const displayThisWeek = function () {
@@ -632,47 +626,61 @@ const displayThisWeek = function () {
 
   projects.forEach((project) => {
     let projectIsDisplayed = false;
-    const projectCard = displayProjectCard(project);
+    const projectCard = displayProjectCard(project, "thisWeek");
 
     project.tasks.forEach((task) => {
-      const taskDueDate = new Date(task.due);
-      const utcDate = new Date(
-        taskDueDate.getUTCFullYear(),
-        taskDueDate.getUTCMonth(),
-        taskDueDate.getUTCDate()
-      );
+      // const taskDueDate = new Date(task.due);
+      // const utcDate = new Date(
+      //   taskDueDate.getUTCFullYear(),
+      //   taskDueDate.getUTCMonth(),
+      //   taskDueDate.getUTCDate()
+      // );
 
-      if (isThisWeek(utcDate)) {
+      // if (isDueThisWeek(utcDate)) {
+      //   if (!projectIsDisplayed) {
+      //     const projectName = document.createElement("h2");
+      //     projectName.textContent = project.name;
+      //     main.appendChild(projectCard);
+
+      //     projectIsDisplayed = true;
+      //   }
+      //   projectCard.lastElementChild.appendChild(displayTask(task, project));
+      // }
+      if (isDueThisWeek(task)) {
         if (!projectIsDisplayed) {
           const projectName = document.createElement("h2");
           projectName.textContent = project.name;
-          // main.appendChild(projectName);
           main.appendChild(projectCard);
 
           projectIsDisplayed = true;
         }
-        // main.appendChild(displayTask(task));
         projectCard.lastElementChild.appendChild(displayTask(task, project));
       }
     });
   });
 };
 
-const isThisWeek = function (date) {
+const isDueThisWeek = function (task) {
+  const taskDueDate = new Date(task.due);
+  const utcDate = new Date(
+    taskDueDate.getUTCFullYear(),
+    taskDueDate.getUTCMonth(),
+    taskDueDate.getUTCDate()
+  );
+
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
 
   const firstDay = new Date(
     currentDate.setDate(currentDate.getDate() - currentDate.getDay())
   );
-  // const lastDay = new Date(currentDate.setDate(currentDate.getDate() + 6));
   const lastDay = new Date(
     firstDay.getFullYear(),
     firstDay.getMonth(),
     firstDay.getDate() + 6
   );
 
-  return date >= firstDay && date <= lastDay;
+  return utcDate >= firstDay && utcDate <= lastDay;
 };
 
 const clearPage = () => {
@@ -715,14 +723,74 @@ const printPage = () => {
   displayHome();
 };
 
+const countTasks = function (project, counterType) {
+  if (project === "global" && !counterType) {
+    let totalTasks = 0;
+    for (const proj of projects) {
+      totalTasks += countTasks(proj);
+    }
+    return totalTasks;
+  }
+  if (counterType === "today") {
+    //conta todas as tarefas pra hoje de todos os projetos
+    if (project === "global") {
+      let totalTasks = 0;
+      for (const proj of projects) {
+        totalTasks += countTasks(proj, "today");
+      }
+      return totalTasks;
+    }
+    //conta tarefas pra hoje do projeto específico
+    let totalTasks = 0;
+    for (const task of project.tasks) {
+      if (isDueToday(task)) {
+        totalTasks += 1;
+      }
+    }
+    return totalTasks;
+  }
+
+  if (counterType === "thisWeek") {
+    //conta todas as tarefas pra essa semana de todos os projetos
+    if (project === "global") {
+      let totalTasks = 0;
+      for (const proj of projects) {
+        totalTasks += countTasks(proj, "thisWeek");
+      }
+      return totalTasks;
+    }
+    //conta tarefas pra hoje do projeto específico
+    let totalTasks = 0;
+    for (const task of project.tasks) {
+      if (isDueThisWeek(task)) {
+        totalTasks += 1;
+      }
+    }
+    return totalTasks;
+  }
+
+  return project.tasks.filter((task) => !task.complete).length;
+};
+
+console.log(countTasks("global", "today"));
+
+const updateCounters = function () {
+  const counters = document.querySelectorAll(".counter");
+
+  //add logic for today, week, main
+  counters.forEach((counter) => {
+    counter.textContent = countTasks(projects[counter.dataset.id]);
+  });
+};
+
 // const bodyContainer = document.querySelector("#body-container");
 
-document.addEventListener("change", function (event) {
-  if (event.target.matches(".task-checkbox")) {
-    // loadProjects();
-    const counters = document.querySelectorAll(".counter");
-    counters.forEach((counter) => {});
-  }
-});
+// document.addEventListener("change", function (event) {
+//   if (event.target.matches(".task-checkbox")) {
+//     // loadProjects();
+//     const counters = document.querySelectorAll(".counter");
+//     counters.forEach((counter) => {});
+//   }
+// });
 
 export { printPage };
