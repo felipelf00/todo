@@ -112,6 +112,11 @@ li.clickable {
   transition: padding-left 300ms cubic-bezier(0.18, 0.89, 0.51, 1.06);
 }
 
+.navigation.clickable {
+  display: flex;
+  justify-content: space-between;
+}
+
 .navigation.clickable:hover,
 li.clickable:hover,
 .navigation.clickable.active,
@@ -227,12 +232,14 @@ ul {
 
 .counter {
   width: 24px;
-  aspect-ratio: 1 / 1;
+  height: 24px;
+  /* aspect-ratio: 1 / 1; */
   border-radius: 50%;
   background-color: var(--header-color);
   color: var(--background-color);
   display: flex;
   justify-content: center;
+  font-size: 1.2rem;
 }
 
 .project-body,

@@ -34,11 +34,15 @@ const createSidebar = function () {
   home.addEventListener("click", () => {
     displayHome();
   });
-  // const counterHome = document.createElement("span");
-  // counterHome.classList.add("counter");
-  // counterHome.dataset.id = "global";
-  // counterHome.textContent = countTasks("global");
-  // home.appendChild(counterHome);
+  const counterHome = document.createElement("span");
+  counterHome.classList.add("counter");
+  counterHome.dataset.id = "global";
+  counterHome.dataset.context = "general";
+  counterHome.textContent = countTasks(
+    counterHome.dataset.id,
+    counterHome.dataset.context
+  );
+  home.appendChild(counterHome);
 
   const today = document.createElement("div");
   today.classList.add("navigation");
@@ -47,13 +51,16 @@ const createSidebar = function () {
   today.textContent = "Hoje";
   today.addEventListener("click", () => {
     displayToday();
-
-    // const active = document.querySelectorAll(".navigation.active");
-    // active.forEach((element) => {
-    //   element.classList.remove("active");
-    // });
-    // today.classList.add("active");
   });
+  const counterToday = document.createElement("span");
+  counterToday.classList.add("counter");
+  counterToday.dataset.id = "global";
+  counterToday.dataset.context = "today";
+  counterToday.textContent = countTasks(
+    counterToday.dataset.id,
+    counterToday.dataset.context
+  );
+  today.appendChild(counterToday);
 
   const week = document.createElement("div");
   week.classList.add("navigation");
@@ -62,13 +69,16 @@ const createSidebar = function () {
   week.textContent = "Esta semana";
   week.addEventListener("click", () => {
     displayThisWeek();
-
-    // const active = document.querySelectorAll(".navigation.active");
-    // active.forEach((element) => {
-    //   element.classList.remove("active");
-    // });
-    // week.classList.add("active");
   });
+  const counterThisWeek = document.createElement("span");
+  counterThisWeek.classList.add("counter");
+  counterThisWeek.dataset.id = "global";
+  counterThisWeek.dataset.context = "thisWeek";
+  counterThisWeek.textContent = countTasks(
+    counterThisWeek.dataset.id,
+    counterThisWeek.dataset.context
+  );
+  week.appendChild(counterThisWeek);
 
   const projectList = document.createElement("div");
   projectList.classList.add("navigation");
@@ -489,7 +499,6 @@ const displayProjectCard = function (project, context) {
   if (context === "general") {
     counter.dataset.context = "general";
   }
-  console.log(counter.dataset.id, counter.dataset.context);
   counter.textContent = countTasks(counter.dataset.id, counter.dataset.context);
   // counter.textContent = project.tasks.filter((task) => !task.complete).length;
 
@@ -757,7 +766,6 @@ const countTasks = function (id, context) {
   }
   switch (context) {
     case "general":
-      console.log("entrou");
       return projects[id].tasks.filter((task) => !task.complete).length;
     case "today":
       // let totalTasks = 0;
