@@ -130,7 +130,11 @@ const loadProjects = function () {
     const counter = document.createElement("span");
     counter.classList.add("counter");
     counter.dataset.id = projects.indexOf(project);
-    counter.textContent = countTasks(project);
+    counter.dataset.context = "general";
+    counter.textContent = countTasks(
+      projects.indexOf(project),
+      counter.dataset.context
+    );
     item.appendChild(counter);
 
     item.addEventListener("click", () => {
@@ -474,6 +478,7 @@ const displayProjectCard = function (project, context) {
   const counter = document.createElement("span");
   counter.classList.add("counter");
   counter.dataset.id = projects.indexOf(project);
+  counter.dataset.context = context;
 
   if (context === "today") {
     counter.dataset.context = "today";
@@ -481,7 +486,11 @@ const displayProjectCard = function (project, context) {
   if (context === "thisWeek") {
     counter.dataset.context = "thisWeek";
   }
-  counter.textContent = countTasks(project, counter.dataset.context);
+  if (context === "general") {
+    counter.dataset.context = "general";
+  }
+  console.log(counter.dataset.id, counter.dataset.context);
+  counter.textContent = countTasks(counter.dataset.id, counter.dataset.context);
   // counter.textContent = project.tasks.filter((task) => !task.complete).length;
 
   const projectBody = document.createElement("div");
@@ -493,11 +502,12 @@ const displayProjectCard = function (project, context) {
   container.appendChild(projectHeader);
   container.appendChild(projectBody);
 
-  container.addEventListener("change", (event) => {
-    if (event.target.matches(".task-checkbox")) {
-      counter.textContent = countTasks(project);
-    }
-  });
+  // PARA ISSO SERÁ CRIADO UM OUTRO EVENTLISTENER EU ACHO
+  // container.addEventListener("change", (event) => {
+  //   if (event.target.matches(".task-checkbox")) {
+  //     counter.textContent = countTasks(project);
+  //   }
+  // });
 
   return container;
 };
@@ -525,7 +535,7 @@ const displayHome = function () {
 
   projects.forEach((project) => {
     let projectIsDisplayed = false;
-    const projectCard = displayProjectCard(project);
+    const projectCard = displayProjectCard(project, "general");
 
     project.tasks.forEach((task) => {
       if (!projectIsDisplayed) {
@@ -723,73 +733,126 @@ const printPage = () => {
   displayHome();
 };
 
-const countTasks = function (project, counterType) {
-  if (project === "global" && !counterType) {
-    let totalTasks = 0;
-    for (const proj of projects) {
-      totalTasks += countTasks(proj);
+const countTasks = function (id, context) {
+  let totalTasks = 0; //jogar pra fora do bloco?
+
+  if (id === "global") {
+    switch (context) {
+      case "general":
+        for (const project of projects) {
+          totalTasks += countTasks(projects.indexOf(project), "general");
+        }
+        return totalTasks;
+      case "today":
+        for (const project of projects) {
+          totalTasks += countTasks(projects.indexOf(project), "today");
+        }
+        return totalTasks;
+      case "thisWeek":
+        for (const project of projects) {
+          totalTasks += countTasks(projects.indexOf(project), "thisWeek");
+        }
+        return totalTasks;
     }
-    return totalTasks;
   }
-  if (counterType === "today") {
-    //conta todas as tarefas pra hoje de todos os projetos
-    if (project === "global") {
-      let totalTasks = 0;
-      for (const proj of projects) {
-        totalTasks += countTasks(proj, "today");
+  switch (context) {
+    case "general":
+      console.log("entrou");
+      return projects[id].tasks.filter((task) => !task.complete).length;
+    case "today":
+      // let totalTasks = 0;
+      for (const task of projects[id].tasks) {
+        if (isDueToday(task) && !task.complete) {
+          totalTasks += 1;
+        }
       }
       return totalTasks;
-    }
-    //conta tarefas pra hoje do projeto específico
-    let totalTasks = 0;
-    for (const task of project.tasks) {
-      if (isDueToday(task)) {
-        totalTasks += 1;
-      }
-    }
-    return totalTasks;
-  }
-
-  if (counterType === "thisWeek") {
-    //conta todas as tarefas pra essa semana de todos os projetos
-    if (project === "global") {
-      let totalTasks = 0;
-      for (const proj of projects) {
-        totalTasks += countTasks(proj, "thisWeek");
+    case "thisWeek":
+      // let totalTasks = 0;
+      for (const task of projects[id].tasks) {
+        if (isDueThisWeek(task) && !task.complete) {
+          totalTasks += 1;
+        }
       }
       return totalTasks;
-    }
-    //conta tarefas pra hoje do projeto específico
-    let totalTasks = 0;
-    for (const task of project.tasks) {
-      if (isDueThisWeek(task)) {
-        totalTasks += 1;
-      }
-    }
-    return totalTasks;
   }
-
-  return project.tasks.filter((task) => !task.complete).length;
 };
 
-console.log(countTasks("global", "today"));
+// const countTasks = function (project, counterType) {
+//   if (project === "global" && !counterType) {
+//     let totalTasks = 0;
+//     for (const proj of projects) {
+//       totalTasks += countTasks(proj);
+//     }
+//     return totalTasks;
+//   }
+//   if (counterType === "today") {
+//     //conta todas as tarefas pra hoje de todos os projetos
+//     if (project === "global") {
+//       let totalTasks = 0;
+//       for (const proj of projects) {
+//         totalTasks += countTasks(proj, "today");
+//       }
+//       return totalTasks;
+//     }
+//     //conta tarefas pra hoje do projeto específico
+//     let totalTasks = 0;
+//     for (const task of project.tasks) {
+//       if (isDueToday(task)) {
+//         totalTasks += 1;
+//       }
+//     }
+//     return totalTasks;
+//   }
+
+//   if (counterType === "thisWeek") {
+//     //conta todas as tarefas pra essa semana de todos os projetos
+//     if (project === "global") {
+//       let totalTasks = 0;
+//       for (const proj of projects) {
+//         totalTasks += countTasks(proj, "thisWeek");
+//       }
+//       return totalTasks;
+//     }
+//     //conta tarefas pra essa semana do projeto específico
+//     let totalTasks = 0;
+//     for (const task of project.tasks) {
+//       if (isDueThisWeek(task)) {
+//         totalTasks += 1;
+//       }
+//     }
+//     return totalTasks;
+//   }
+
+//   return project.tasks.filter((task) => !task.complete).length;
+// };
 
 const updateCounters = function () {
   const counters = document.querySelectorAll(".counter");
 
   //add logic for today, week, main
   counters.forEach((counter) => {
-    counter.textContent = countTasks(projects[counter.dataset.id]);
+    // if (counter.dataset.context === "today") {
+    //   if(counter.dataset.id === "global") {
+    //     counter.textContent = countTasks("global", "today")
+    //   }
+    // }
+
+    counter.textContent = countTasks(
+      counter.dataset.id,
+      counter.dataset.context
+    );
+
+    // counter.textContent = countTasks(projects[counter.dataset.id]);
   });
 };
 
 // const bodyContainer = document.querySelector("#body-container");
 
+// REDUNDANTE? JÁ TEM NOS CHECKBOXES
 // document.addEventListener("change", function (event) {
 //   if (event.target.matches(".task-checkbox")) {
-//     // loadProjects();
-//     const counters = document.querySelectorAll(".counter");
-//     counters.forEach((counter) => {});
+//     updateCounters();
 //   }
 // });
 
