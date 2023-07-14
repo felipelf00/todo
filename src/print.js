@@ -337,19 +337,28 @@ const createTaskForm = function () {
 
   // --- Add task to project object
   button.addEventListener("click", () => {
-    projects[activeProjectIndex].tasks.push(
-      Task(
-        title.value,
-        description.value,
-        due.value,
-        priority.value,
-        notes.value
-      )
+    // projects[activeProjectIndex].tasks.push(
+    //   Task(
+    //     title.value,
+    //     description.value,
+    //     due.value,
+    //     priority.value,
+    //     notes.value
+    //   )
+    // );
+
+    projects[activeProjectIndex].addTask(
+      title.value,
+      description.value,
+      due.value,
+      priority.value,
+      notes.value
     );
 
     // test storage
     storeProject(projects[activeProjectIndex]);
 
+    // melhorar para que possa adicionar tarefas em outras telas
     const lastTaskIndex = projects[activeProjectIndex].tasks.length - 1;
     document
       .querySelector("#project-container")
@@ -367,6 +376,8 @@ const createTaskForm = function () {
     due.value = "";
     priority.value = "";
     notes.value = "";
+
+    updateCounters();
   });
 
   container.appendChild(titleLabel);
@@ -423,7 +434,7 @@ const displayTask = function (task, project) {
   const check = document.createElement("input");
   check.type = "checkbox";
   check.classList.add("task-checkbox");
-  check.dataset.projectIndex = projects.indexOf(project); // maybe not necessary
+  // check.dataset.projectIndex = projects.indexOf(project); // maybe not necessary
 
   check.addEventListener("change", () => {
     title.classList.toggle("completed");
@@ -446,6 +457,14 @@ const displayTask = function (task, project) {
   deleteTask.textContent = "delete";
   deleteTask.classList.add("material-icons");
   deleteTask.classList.add("clickable");
+
+  deleteTask.addEventListener("click", () => {
+    // console.log(project.tasks.indexOf(task));
+    // console.log("task: " + task);
+    // console.log(project.tasks);
+    project.removeTask(task);
+    storeProject(project);
+  });
 
   cornerIcons.appendChild(editTask);
   cornerIcons.appendChild(deleteTask);

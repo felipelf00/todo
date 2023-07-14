@@ -5,7 +5,13 @@ const Project = function (name) {
   const addTask = (title, description, due, priority, notes, complete) => {
     tasks.push(Task(title, description, due, priority, notes, complete, this));
   };
-  return { name, tasks, addTask };
+  const removeTask = (task) => {
+    const index = tasks.indexOf(task);
+    if (index !== -1) {
+      tasks.splice(index, 1);
+    }
+  };
+  return { name, tasks, addTask, removeTask };
 };
 
 const newProject = (name) => {
