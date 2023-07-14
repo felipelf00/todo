@@ -399,6 +399,7 @@ const displayTask = function (task, project) {
   const expander = document.createElement("span");
   expander.classList.add("material-icons");
   expander.classList.add("clickable");
+  expander.classList.add("left");
   expander.textContent = "expand_more";
 
   expander.addEventListener("click", () => {
@@ -406,13 +407,18 @@ const displayTask = function (task, project) {
     expander.classList.toggle("clicked");
   });
 
-  const title = document.createElement("div");
+  const title = document.createElement("span");
   title.textContent = task.title;
+  title.classList.add("center");
 
   title.addEventListener("click", () => {
     container.classList.toggle("expanded");
     expander.classList.toggle("clicked");
   });
+
+  const cornerIcons = document.createElement("span");
+  cornerIcons.classList.add("task-icons");
+  cornerIcons.classList.add("right");
 
   const check = document.createElement("input");
   check.type = "checkbox";
@@ -431,9 +437,23 @@ const displayTask = function (task, project) {
     title.classList.add("completed");
   }
 
+  const editTask = document.createElement("span");
+  editTask.textContent = "edit";
+  editTask.classList.add("material-icons");
+  editTask.classList.add("clickable");
+
+  const deleteTask = document.createElement("span");
+  deleteTask.textContent = "delete";
+  deleteTask.classList.add("material-icons");
+  deleteTask.classList.add("clickable");
+
+  cornerIcons.appendChild(editTask);
+  cornerIcons.appendChild(deleteTask);
+  cornerIcons.appendChild(check);
+
   taskHeader.appendChild(expander);
   taskHeader.appendChild(title);
-  taskHeader.appendChild(check);
+  taskHeader.appendChild(cornerIcons);
 
   const taskBody = document.createElement("div");
   taskBody.classList.add("task-body");

@@ -275,16 +275,39 @@ ul {
   grid-row: 1;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
-.task-header div {
-  width: 100%;
+.task-header .right,
+.task-header .left {
+  flex: 0 0 auto;
 }
 
-/* .task-body {
-  grid-row: 2;
-  overflow: hidden;
-} */
+.task-header .left {
+  margin-right: 34px;
+}
+
+.task-header .center {
+  flex: 1;
+  text-align: center;
+}
+
+.task-icons {
+  display: flex;
+  justify-content: center;
+}
+
+.task-checkbox {
+  accent-color: var(--header-color);
+}
+
+.task-icons * {
+  font-size: 19px;
+}
+
+.material-icons:hover {
+  color: var(--header-color);
+}
 
 .expanded {
   grid-template-rows: auto 1fr;
