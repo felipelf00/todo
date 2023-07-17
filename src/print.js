@@ -459,11 +459,18 @@ const displayTask = function (task, project) {
   deleteTask.classList.add("clickable");
 
   deleteTask.addEventListener("click", () => {
-    // console.log(project.tasks.indexOf(task));
-    // console.log("task: " + task);
-    // console.log(project.tasks);
+    console.log(deleteTask.closest(".project-card").querySelector(".counter"));
+
     project.removeTask(task);
     storeProject(project);
+
+    const oldProjectCard = deleteTask.closest(".project-card");
+    const counter = oldProjectCard.querySelector(".counter");
+    const parentProject = projects[counter.dataset.id];
+    const projectContext = counter.dataset.context;
+
+    const newProjectCard = displayProjectCard(parentProject, projectContext);
+    oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
   });
 
   cornerIcons.appendChild(editTask);
@@ -577,7 +584,7 @@ const displayHome = function () {
 
   home.classList.add("active");
 
-  const title = document.createElement("h1");
+  const title = document.createElement("h2");
   title.textContent = "Todas as tarefas:";
   main.appendChild(title);
 

@@ -1,4 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Patua+One&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Patua+One&display=swap"); */
+/* @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
 :root {
   /* --background-color: #f6f1f1; */
@@ -15,8 +17,10 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Patua One", cursive;
-  font-weight: lighter;
+  /* font-family: "Patua One", cursive; */
+  /* font-family: "Open Sans", sans-serif; */
+  font-family: "Merriweather Sans", sans-serif;
+  font-weight: 400;
   color: var(--text-color-dark);
 }
 
@@ -24,7 +28,8 @@ h1,
 h2,
 h3,
 h4 {
-  font-weight: inherit;
+  /* font-weight: inherit; */
+  font-weight: 700;
 }
 
 button,
@@ -81,10 +86,13 @@ header {
 }
 
 #title {
+  /* font-family: "Lilita One", cursive; */
+  /* font-family: "Shrikhand", cursive; */
   margin: 0;
   text-align: center;
-  text-shadow: -1px 1px 4px var(--text-color-dark);
-  font-weight: 600;
+  /* text-shadow: -1px 1px 4px var(--text-color-dark); */
+  font-weight: 700;
+  font-style: italic;
 }
 
 .burger {
@@ -154,7 +162,7 @@ li.clickable.active::before {
   color: var(--text-color-dark);
   padding: 20px;
   box-shadow: 2px 0px var(--shadow-color);
-
+  min-width: 175px;
   max-width: 230px;
   overflow-wrap: break-word;
 }
@@ -166,6 +174,7 @@ li.clickable.active::before {
 .navigation {
   font-size: 1.4rem;
   margin-bottom: 4px;
+  font-weight: 700;
   /* position: relative; */
 }
 
@@ -178,10 +187,16 @@ li.clickable.active::before {
 .navigation li {
   display: flex;
   justify-content: space-between;
+  font-style: italic;
 }
 
 ul {
   list-style-type: none;
+}
+
+#new-project {
+  font-weight: 400;
+  font-size: 1rem;
 }
 
 #new-project span,
@@ -195,7 +210,7 @@ ul {
 
 #new-task {
   padding: 20px;
-  max-width: 120px;
+  max-width: 125px;
   margin: auto;
 }
 
@@ -219,6 +234,7 @@ ul {
   width: 60%;
   margin: auto;
   margin-bottom: 7px;
+  font-weight: 700;
 }
 
 .project-header:hover {
@@ -228,6 +244,7 @@ ul {
 
 .card-title {
   font-size: 1.2rem;
+  font-style: italic;
 }
 
 .counter {
@@ -239,6 +256,7 @@ ul {
   color: var(--background-color);
   display: flex;
   justify-content: center;
+  align-items: center;
   font-size: 1.2rem;
 }
 
@@ -276,6 +294,7 @@ ul {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-weight: 700;
 }
 
 .task-header .right,
