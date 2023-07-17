@@ -459,18 +459,31 @@ const displayTask = function (task, project) {
   deleteTask.classList.add("clickable");
 
   deleteTask.addEventListener("click", () => {
-    console.log(deleteTask.closest(".project-card").querySelector(".counter"));
+    // console.log(deleteTask.closest(".project-card").querySelector(".counter"));
 
     project.removeTask(task);
     storeProject(project);
 
     const oldProjectCard = deleteTask.closest(".project-card");
+
     const counter = oldProjectCard.querySelector(".counter");
     const parentProject = projects[counter.dataset.id];
     const projectContext = counter.dataset.context;
+    console.log(parentProject);
+    console.log(projectContext);
 
     const newProjectCard = displayProjectCard(parentProject, projectContext);
-    oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
+
+    // console.log(oldProjectCard);
+    console.log(newProjectCard);
+
+    if (newProjectCard) {
+      oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
+    } else {
+      oldProjectCard.remove();
+    }
+
+    updateCounters();
   });
 
   cornerIcons.appendChild(editTask);
@@ -551,18 +564,47 @@ const displayProjectCard = function (project, context) {
   const projectBody = document.createElement("div");
   projectBody.classList.add("project-body");
 
+  let hasTasksToDisplay = false;
+
+  switch (context) {
+    case "today":
+      project.tasks.forEach((task) => {
+        if (isDueToday(task)) {
+          projectBody.appendChild(displayTask(task, project, context));
+          hasTasksToDisplay = true;
+        }
+      });
+      if (!hasTasksToDisplay) {
+        return;
+      }
+      break;
+    case "thisWeek":
+      project.tasks.forEach((task) => {
+        if (isDueThisWeek(task)) {
+          projectBody.appendChild(displayTask(task, project, context));
+          hasTasksToDisplay = true;
+        }
+      });
+      if (!hasTasksToDisplay) {
+        return;
+      }
+      break;
+    case "general":
+      if (project.tasks.length === 0) {
+        return;
+      }
+      project.tasks.forEach((task) => {
+        projectBody.appendChild(displayTask(task, project, context));
+        hasTasksToDisplay = true;
+      });
+      break;
+  }
+
   projectHeader.appendChild(expander);
   projectHeader.appendChild(title);
   projectHeader.appendChild(counter);
   container.appendChild(projectHeader);
   container.appendChild(projectBody);
-
-  // PARA ISSO SERÁ CRIADO UM OUTRO EVENTLISTENER EU ACHO
-  // container.addEventListener("change", (event) => {
-  //   if (event.target.matches(".task-checkbox")) {
-  //     counter.textContent = countTasks(project);
-  //   }
-  // });
 
   return container;
 };
@@ -588,17 +630,24 @@ const displayHome = function () {
   title.textContent = "Todas as tarefas:";
   main.appendChild(title);
 
-  projects.forEach((project) => {
-    let projectIsDisplayed = false;
-    const projectCard = displayProjectCard(project, "general");
+  // projects.forEach((project) => {
+  //   let projectIsDisplayed = false;
+  //   const projectCard = displayProjectCard(project, "general");
 
-    project.tasks.forEach((task) => {
-      if (!projectIsDisplayed) {
-        main.appendChild(projectCard);
-        projectIsDisplayed = true;
-      }
-      projectCard.lastElementChild.appendChild(displayTask(task, project));
-    });
+  //   project.tasks.forEach((task) => {
+  //     if (!projectIsDisplayed) {
+  //       main.appendChild(projectCard);
+  //       projectIsDisplayed = true;
+  //     }
+  //     projectCard.lastElementChild.appendChild(displayTask(task, project));
+  //   });
+  // });
+
+  projects.forEach((project) => {
+    const newProjectCard = displayProjectCard(project, "general");
+    if (newProjectCard) {
+      main.appendChild(newProjectCard);
+    }
   });
 };
 
@@ -624,33 +673,32 @@ const displayToday = function () {
 
   main.appendChild(title);
 
-  // const currentDate = new Date();
+  // projects.forEach((project) => {
+  //   let projectIsDisplayed = false;
+  //   const projectCard = displayProjectCard(project, "today");
 
-  // currentDate.setHours(0, 0, 0, 0);
+  //   project.tasks.forEach((task) => {
+  // currentDate.getUTCDate() === taskDueDate.getUTCDate();
+
+  //     if (isDueToday(task)) {
+  //       if (!projectIsDisplayed) {
+  //         const projectName = document.createElement("h2");
+  //         projectName.textContent = project.name;
+  //         main.appendChild(projectCard);
+
+  //         projectIsDisplayed = true;
+  //       }
+  //       projectCard.lastElementChild.appendChild(displayTask(task, project));
+  //     }
+  //   });
+  // });
 
   projects.forEach((project) => {
-    let projectIsDisplayed = false;
-    const projectCard = displayProjectCard(project, "today");
-
-    project.tasks.forEach((task) => {
-      // const taskDueDate = new Date(task.due);
-
-      // const isDueToday =
-      //   currentDate.getUTCFullYear() === taskDueDate.getUTCFullYear() &&
-      //   currentDate.getUTCMonth() === taskDueDate.getUTCMonth() &&
-      //   currentDate.getUTCDate() === taskDueDate.getUTCDate();
-
-      if (isDueToday(task)) {
-        if (!projectIsDisplayed) {
-          const projectName = document.createElement("h2");
-          projectName.textContent = project.name;
-          main.appendChild(projectCard);
-
-          projectIsDisplayed = true;
-        }
-        projectCard.lastElementChild.appendChild(displayTask(task, project));
-      }
-    });
+    const newProjectCard = displayProjectCard(project, "today");
+    if (newProjectCard) {
+      main.appendChild(newProjectCard);
+    }
+    // main.appendChild(displayProjectCard(project, "today"));
   });
 };
 
@@ -689,39 +737,28 @@ const displayThisWeek = function () {
 
   main.appendChild(title);
 
+  // projects.forEach((project) => {
+  //   let projectIsDisplayed = false;
+  //   const projectCard = displayProjectCard(project, "thisWeek");
+
+  //   project.tasks.forEach((task) => {
+  //     if (isDueThisWeek(task)) {
+  //       if (!projectIsDisplayed) {
+  //         const projectName = document.createElement("h2");
+  //         projectName.textContent = project.name;
+  //         main.appendChild(projectCard);
+
+  //         projectIsDisplayed = true;
+  //       }
+  //       projectCard.lastElementChild.appendChild(displayTask(task, project));
+  //     }
+  //   });
+  // });
   projects.forEach((project) => {
-    let projectIsDisplayed = false;
-    const projectCard = displayProjectCard(project, "thisWeek");
-
-    project.tasks.forEach((task) => {
-      // const taskDueDate = new Date(task.due);
-      // const utcDate = new Date(
-      //   taskDueDate.getUTCFullYear(),
-      //   taskDueDate.getUTCMonth(),
-      //   taskDueDate.getUTCDate()
-      // );
-
-      // if (isDueThisWeek(utcDate)) {
-      //   if (!projectIsDisplayed) {
-      //     const projectName = document.createElement("h2");
-      //     projectName.textContent = project.name;
-      //     main.appendChild(projectCard);
-
-      //     projectIsDisplayed = true;
-      //   }
-      //   projectCard.lastElementChild.appendChild(displayTask(task, project));
-      // }
-      if (isDueThisWeek(task)) {
-        if (!projectIsDisplayed) {
-          const projectName = document.createElement("h2");
-          projectName.textContent = project.name;
-          main.appendChild(projectCard);
-
-          projectIsDisplayed = true;
-        }
-        projectCard.lastElementChild.appendChild(displayTask(task, project));
-      }
-    });
+    const newProjectCard = displayProjectCard(project, "thisWeek");
+    if (newProjectCard) {
+      main.appendChild(newProjectCard);
+    }
   });
 };
 
