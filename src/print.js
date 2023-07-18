@@ -236,38 +236,6 @@ const createProjectForm = function () {
   return container;
 };
 
-// const displayProject = function (project) {
-//   const container = document.createElement("div");
-//   container.id = "project-container";
-
-//   const projectTitle = document.createElement("h2");
-//   projectTitle.textContent = project.name;
-
-//   const addNewTask = document.createElement("div");
-//   addNewTask.id = "new-task";
-//   addNewTask.classList.add("clickable");
-//   const addButton = document.createElement("button");
-//   addButton.textContent = "+";
-//   // addButton.classList.add("add-button");
-//   const newTaskLabel = document.createElement("span");
-//   newTaskLabel.textContent = "Nova Tarefa";
-//   addNewTask.appendChild(addButton);
-//   addNewTask.appendChild(newTaskLabel);
-
-//   addNewTask.addEventListener("click", () => {
-//     document.querySelector("#new-task-form").classList.remove("hidden");
-//     document.querySelector("#shadow").classList.remove("hidden");
-//   });
-
-//   container.appendChild(projectTitle);
-//   container.appendChild(addNewTask);
-//   project.tasks.forEach((task) => {
-//     container.appendChild(displayTask(task, project));
-//   });
-
-//   return container;
-// };
-
 const displayProject = function (project) {
   const main = document.querySelector("#main");
   main.innerHTML = "";
@@ -622,9 +590,9 @@ const displayProjectCard = function (project, context) {
       }
       break;
     case "general":
-      if (project.tasks.length === 0) {
-        return;
-      }
+      // if (project.tasks.length === 0) {
+      //   return;
+      // }
       project.tasks.forEach((task) => {
         projectBody.appendChild(displayTask(task, project, context));
         hasTasksToDisplay = true;
