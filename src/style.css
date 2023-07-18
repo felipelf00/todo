@@ -11,6 +11,7 @@
   --sidebar-color: #f4efeb;
   --header-color: #19a7ce;
   --shadow-color: #78624f;
+  --button-color: rgb(235 143 71);
 }
 
 body {
@@ -59,10 +60,6 @@ label {
   width: 100%;
   height: 100%;
   z-index: 4;
-}
-
-.hidden {
-  display: none;
 }
 
 .form {
@@ -223,7 +220,30 @@ ul {
   grid-template-rows: auto 0fr;
   width: min(520px, 100vw);
   margin: auto;
+  position: relative;
 }
+
+.add-button {
+  position: absolute;
+  top: 8px;
+  right: 3px;
+  background-color: var(--button-color);
+  color: var(--background-color);
+  border: none;
+  border-radius: 13px;
+  /* padding: 4px 6px; */
+  font-weight: 700;
+  /* min-width: 26px; */
+  height: 26px;
+}
+
+.add-button:hover {
+  transform: scale(1.02);
+}
+
+/* .add-button:hover::after {
+  content: " Tarefa";
+} */
 
 .project-header {
   grid-row: 1;
@@ -248,9 +268,8 @@ ul {
 }
 
 .counter {
-  width: 24px;
-  height: 24px;
-  /* aspect-ratio: 1 / 1; */
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background-color: var(--header-color);
   color: var(--background-color);
@@ -357,4 +376,8 @@ ul {
   #main {
     /* grid-column: 2 / 3; */
   }
+}
+
+.hidden {
+  display: none;
 }

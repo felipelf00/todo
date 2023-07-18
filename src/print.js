@@ -97,7 +97,7 @@ const createSidebar = function () {
   addNewProject.classList.add("clickable");
   const addButton = document.createElement("button");
   addButton.textContent = "+";
-  addButton.classList.add("add-button");
+  // addButton.classList.add("add-button");
   const newProjectLabel = document.createElement("span");
   newProjectLabel.textContent = "Novo Projeto";
   addNewProject.appendChild(addButton);
@@ -148,16 +148,19 @@ const loadProjects = function () {
     item.appendChild(counter);
 
     item.addEventListener("click", () => {
-      selectProject(project);
-      const activeProject = document.querySelectorAll(".navigation li.active");
-      activeProject.forEach((element) => {
-        element.classList.remove("active");
-      });
+      // selectProject(project);
+      // const activeProject = document.querySelectorAll(".navigation li.active");
+      // activeProject.forEach((element) => {
+      //   element.classList.remove("active");
+      // });
 
-      const active = document.querySelectorAll(".navigation.active");
-      active.forEach((element) => {
-        element.classList.remove("active");
-      });
+      // const active = document.querySelectorAll(".navigation.active");
+      // active.forEach((element) => {
+      //   element.classList.remove("active");
+      // });
+
+      activeProject = project;
+      displayProject(project);
 
       item.classList.add("active");
     });
@@ -180,14 +183,14 @@ const loadProjects = function () {
   return list;
 };
 
-let activeProjectIndex;
+let activeProject;
 
-const selectProject = function (project) {
-  const main = document.querySelector("main");
-  main.innerHTML = "";
-  activeProjectIndex = projects.indexOf(project);
-  main.appendChild(displayProject(projects[activeProjectIndex]));
-};
+// const selectProject = function (project) {
+//   const main = document.querySelector("main");
+//   main.innerHTML = "";
+//   activeProjectIndex = projects.indexOf(project);
+//   main.appendChild(displayProject(projects[activeProjectIndex]));
+// };
 
 const createProjectForm = function () {
   const container = document.createElement("div");
@@ -210,7 +213,8 @@ const createProjectForm = function () {
   button.addEventListener("click", () => {
     if (project.value !== "") {
       const currentProject = newProject(project.value);
-      selectProject(currentProject);
+      // selectProject(currentProject);
+      displayProject(currentProject);
 
       // test storage
       storeProject(currentProject);
@@ -232,36 +236,57 @@ const createProjectForm = function () {
   return container;
 };
 
+// const displayProject = function (project) {
+//   const container = document.createElement("div");
+//   container.id = "project-container";
+
+//   const projectTitle = document.createElement("h2");
+//   projectTitle.textContent = project.name;
+
+//   const addNewTask = document.createElement("div");
+//   addNewTask.id = "new-task";
+//   addNewTask.classList.add("clickable");
+//   const addButton = document.createElement("button");
+//   addButton.textContent = "+";
+//   // addButton.classList.add("add-button");
+//   const newTaskLabel = document.createElement("span");
+//   newTaskLabel.textContent = "Nova Tarefa";
+//   addNewTask.appendChild(addButton);
+//   addNewTask.appendChild(newTaskLabel);
+
+//   addNewTask.addEventListener("click", () => {
+//     document.querySelector("#new-task-form").classList.remove("hidden");
+//     document.querySelector("#shadow").classList.remove("hidden");
+//   });
+
+//   container.appendChild(projectTitle);
+//   container.appendChild(addNewTask);
+//   project.tasks.forEach((task) => {
+//     container.appendChild(displayTask(task, project));
+//   });
+
+//   return container;
+// };
+
 const displayProject = function (project) {
-  const container = document.createElement("div");
-  container.id = "project-container";
+  const main = document.querySelector("#main");
+  main.innerHTML = "";
 
-  const projectTitle = document.createElement("h2");
-  projectTitle.textContent = project.name;
+  const title = document.createElement("h2");
+  title.textContent = project.name;
 
-  const addNewTask = document.createElement("div");
-  addNewTask.id = "new-task";
-  addNewTask.classList.add("clickable");
-  const addButton = document.createElement("button");
-  addButton.textContent = "+";
-  addButton.classList.add("add-button");
-  const newTaskLabel = document.createElement("span");
-  newTaskLabel.textContent = "Nova Tarefa";
-  addNewTask.appendChild(addButton);
-  addNewTask.appendChild(newTaskLabel);
-
-  addNewTask.addEventListener("click", () => {
-    document.querySelector("#new-task-form").classList.remove("hidden");
-    document.querySelector("#shadow").classList.remove("hidden");
+  const active = document.querySelectorAll(".navigation.active");
+  active.forEach((element) => {
+    element.classList.remove("active");
   });
 
-  container.appendChild(projectTitle);
-  container.appendChild(addNewTask);
-  project.tasks.forEach((task) => {
-    container.appendChild(displayTask(task, project));
+  const activeProjects = document.querySelectorAll(".navigation .active");
+  activeProjects.forEach((element) => {
+    element.classList.remove("active");
   });
 
-  return container;
+  main.appendChild(title);
+  main.appendChild(displayProjectCard(project, "general"));
 };
 
 const createTaskForm = function () {
@@ -337,17 +362,7 @@ const createTaskForm = function () {
 
   // --- Add task to project object
   button.addEventListener("click", () => {
-    // projects[activeProjectIndex].tasks.push(
-    //   Task(
-    //     title.value,
-    //     description.value,
-    //     due.value,
-    //     priority.value,
-    //     notes.value
-    //   )
-    // );
-
-    projects[activeProjectIndex].addTask(
+    activeProject.addTask(
       title.value,
       description.value,
       due.value,
@@ -356,18 +371,36 @@ const createTaskForm = function () {
     );
 
     // test storage
-    storeProject(projects[activeProjectIndex]);
+    storeProject(activeProject);
 
     // melhorar para que possa adicionar tarefas em outras telas
-    const lastTaskIndex = projects[activeProjectIndex].tasks.length - 1;
-    document
-      .querySelector("#project-container")
-      .appendChild(
-        displayTask(
-          projects[activeProjectIndex].tasks[lastTaskIndex],
-          projects[activeProjectIndex]
-        )
-      );
+    // const lastTaskIndex = projects[activeProjectIndex].tasks.length - 1;
+    // document
+    //   .querySelector("#project-container")
+    //   .appendChild(
+    //     displayTask(
+    //       projects[activeProjectIndex].tasks[lastTaskIndex],
+    //       projects[activeProjectIndex]
+    //     )
+    //   );
+
+    const main = document.querySelector("#main");
+
+    const counter = main.querySelector(
+      `[data-id="${projects.indexOf(activeProject)}"]`
+    );
+    const oldProjectCard = counter.closest(".project-card");
+    const newProjectCard = displayProjectCard(
+      activeProject,
+      counter.dataset.context
+    );
+
+    console.log(counter);
+    console.log(oldProjectCard);
+
+    oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
+    updateCounters();
+
     container.classList.add("hidden");
     document.querySelector("#shadow").classList.add("hidden");
 
@@ -459,8 +492,6 @@ const displayTask = function (task, project) {
   deleteTask.classList.add("clickable");
 
   deleteTask.addEventListener("click", () => {
-    // console.log(deleteTask.closest(".project-card").querySelector(".counter"));
-
     project.removeTask(task);
     storeProject(project);
 
@@ -469,20 +500,12 @@ const displayTask = function (task, project) {
     const counter = oldProjectCard.querySelector(".counter");
     const parentProject = projects[counter.dataset.id];
     const projectContext = counter.dataset.context;
-    console.log(parentProject);
-    console.log(projectContext);
-
     const newProjectCard = displayProjectCard(parentProject, projectContext);
-
-    // console.log(oldProjectCard);
-    console.log(newProjectCard);
-
     if (newProjectCard) {
       oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
     } else {
       oldProjectCard.remove();
     }
-
     updateCounters();
   });
 
@@ -559,7 +582,16 @@ const displayProjectCard = function (project, context) {
     counter.dataset.context = "general";
   }
   counter.textContent = countTasks(counter.dataset.id, counter.dataset.context);
-  // counter.textContent = project.tasks.filter((task) => !task.complete).length;
+
+  const addTask = document.createElement("button");
+  addTask.textContent = "+ Tarefa";
+  addTask.classList.add("clickable");
+  addTask.classList.add("add-button");
+  addTask.addEventListener("click", () => {
+    document.querySelector("#new-task-form").classList.remove("hidden");
+    document.querySelector("#shadow").classList.remove("hidden");
+    activeProject = project;
+  });
 
   const projectBody = document.createElement("div");
   projectBody.classList.add("project-body");
@@ -604,6 +636,7 @@ const displayProjectCard = function (project, context) {
   projectHeader.appendChild(title);
   projectHeader.appendChild(counter);
   container.appendChild(projectHeader);
+  container.appendChild(addTask);
   container.appendChild(projectBody);
 
   return container;
@@ -811,15 +844,12 @@ const printPage = () => {
   const container = document.createElement("div");
   container.appendChild(createSidebar());
   container.appendChild(main);
-  // container.classList.add("body-container");
   container.id = "body-container";
 
   body.appendChild(createTaskForm());
   body.appendChild(createProjectForm());
   body.appendChild(shadow);
   body.appendChild(createHeader());
-  // body.appendChild(createSidebar());
-  // body.appendChild(main);
   body.appendChild(container);
 
   displayHome();
@@ -851,7 +881,6 @@ const countTasks = function (id, context) {
     case "general":
       return projects[id].tasks.filter((task) => !task.complete).length;
     case "today":
-      // let totalTasks = 0;
       for (const task of projects[id].tasks) {
         if (isDueToday(task) && !task.complete) {
           totalTasks += 1;
@@ -859,7 +888,6 @@ const countTasks = function (id, context) {
       }
       return totalTasks;
     case "thisWeek":
-      // let totalTasks = 0;
       for (const task of projects[id].tasks) {
         if (isDueThisWeek(task) && !task.complete) {
           totalTasks += 1;
@@ -869,82 +897,19 @@ const countTasks = function (id, context) {
   }
 };
 
-// const countTasks = function (project, counterType) {
-//   if (project === "global" && !counterType) {
-//     let totalTasks = 0;
-//     for (const proj of projects) {
-//       totalTasks += countTasks(proj);
-//     }
-//     return totalTasks;
-//   }
-//   if (counterType === "today") {
-//     //conta todas as tarefas pra hoje de todos os projetos
-//     if (project === "global") {
-//       let totalTasks = 0;
-//       for (const proj of projects) {
-//         totalTasks += countTasks(proj, "today");
-//       }
-//       return totalTasks;
-//     }
-//     //conta tarefas pra hoje do projeto específico
-//     let totalTasks = 0;
-//     for (const task of project.tasks) {
-//       if (isDueToday(task)) {
-//         totalTasks += 1;
-//       }
-//     }
-//     return totalTasks;
-//   }
-
-//   if (counterType === "thisWeek") {
-//     //conta todas as tarefas pra essa semana de todos os projetos
-//     if (project === "global") {
-//       let totalTasks = 0;
-//       for (const proj of projects) {
-//         totalTasks += countTasks(proj, "thisWeek");
-//       }
-//       return totalTasks;
-//     }
-//     //conta tarefas pra essa semana do projeto específico
-//     let totalTasks = 0;
-//     for (const task of project.tasks) {
-//       if (isDueThisWeek(task)) {
-//         totalTasks += 1;
-//       }
-//     }
-//     return totalTasks;
-//   }
-
-//   return project.tasks.filter((task) => !task.complete).length;
-// };
-
 const updateCounters = function () {
   const counters = document.querySelectorAll(".counter");
-
-  //add logic for today, week, main
   counters.forEach((counter) => {
-    // if (counter.dataset.context === "today") {
-    //   if(counter.dataset.id === "global") {
-    //     counter.textContent = countTasks("global", "today")
-    //   }
-    // }
-
     counter.textContent = countTasks(
       counter.dataset.id,
       counter.dataset.context
     );
-
-    // counter.textContent = countTasks(projects[counter.dataset.id]);
+    // if (counter.textContent == 0) {
+    //   counter.classList.add("hidden");
+    // } else {
+    //   counter.classList.remove("hidden");
+    // }
   });
 };
-
-// const bodyContainer = document.querySelector("#body-container");
-
-// REDUNDANTE? JÁ TEM NOS CHECKBOXES
-// document.addEventListener("change", function (event) {
-//   if (event.target.matches(".task-checkbox")) {
-//     updateCounters();
-//   }
-// });
 
 export { printPage };
