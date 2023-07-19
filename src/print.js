@@ -552,7 +552,7 @@ const displayProjectCard = function (project, context) {
   counter.textContent = countTasks(counter.dataset.id, counter.dataset.context);
 
   const addTask = document.createElement("button");
-  addTask.textContent = "+ Tarefa";
+  addTask.textContent = "+";
   addTask.classList.add("clickable");
   addTask.classList.add("add-button");
   addTask.addEventListener("click", () => {
@@ -669,30 +669,10 @@ const displayToday = function () {
 
   today.classList.add("active");
 
-  const title = document.createElement("h1");
+  const title = document.createElement("h2");
   title.textContent = "Tarefas para hoje:";
 
   main.appendChild(title);
-
-  // projects.forEach((project) => {
-  //   let projectIsDisplayed = false;
-  //   const projectCard = displayProjectCard(project, "today");
-
-  //   project.tasks.forEach((task) => {
-  // currentDate.getUTCDate() === taskDueDate.getUTCDate();
-
-  //     if (isDueToday(task)) {
-  //       if (!projectIsDisplayed) {
-  //         const projectName = document.createElement("h2");
-  //         projectName.textContent = project.name;
-  //         main.appendChild(projectCard);
-
-  //         projectIsDisplayed = true;
-  //       }
-  //       projectCard.lastElementChild.appendChild(displayTask(task, project));
-  //     }
-  //   });
-  // });
 
   projects.forEach((project) => {
     const newProjectCard = displayProjectCard(project, "today");
@@ -733,7 +713,7 @@ const displayThisWeek = function () {
 
   week.classList.add("active");
 
-  const title = document.createElement("h1");
+  const title = document.createElement("h2");
   title.textContent = "Tarefas para essa semana:";
 
   main.appendChild(title);

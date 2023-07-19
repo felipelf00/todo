@@ -102,9 +102,25 @@ header {
 #main {
   padding-top: 40px;
   text-align: center;
-  height: 100vh;
-  height: 100dvh;
+  /* height: 100vh;
+  height: 100dvh; */
+  /* background-color: var(--background-color); */
+}
+
+/* teste */
+#body-container {
+  /* height: calc(100% - 40px);  */
+  overflow-y: auto;
   background-color: var(--background-color);
+  height: 100%;
+  /* padding-right: 15px;  */
+}
+
+/* teste */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
 }
 
 .clickable {
@@ -226,14 +242,14 @@ ul {
 .add-button {
   position: absolute;
   top: 8px;
-  right: 3px;
+  right: 16px;
   background-color: var(--button-color);
   color: var(--background-color);
   border: none;
   border-radius: 13px;
   /* padding: 4px 6px; */
   font-weight: 700;
-  /* min-width: 26px; */
+  min-width: 26px;
   height: 26px;
 }
 
@@ -373,8 +389,11 @@ ul {
     left: 0;
     max-width: clamp(164px, 17vw, 200px);
   }
-  #main {
-    /* grid-column: 2 / 3; */
+  .add-button {
+    right: 3px;
+  }
+  .add-button::after {
+    content: " Tarefa";
   }
 }
 
