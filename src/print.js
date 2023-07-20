@@ -338,19 +338,7 @@ const createTaskForm = function () {
       notes.value
     );
 
-    // test storage
     storeProject(activeProject);
-
-    // melhorar para que possa adicionar tarefas em outras telas
-    // const lastTaskIndex = projects[activeProjectIndex].tasks.length - 1;
-    // document
-    //   .querySelector("#project-container")
-    //   .appendChild(
-    //     displayTask(
-    //       projects[activeProjectIndex].tasks[lastTaskIndex],
-    //       projects[activeProjectIndex]
-    //     )
-    //   );
 
     const main = document.querySelector("#main");
 
@@ -460,21 +448,22 @@ const displayTask = function (task, project) {
   deleteTask.classList.add("clickable");
 
   deleteTask.addEventListener("click", () => {
-    project.removeTask(task);
-    storeProject(project);
+    confirmDelete(task, project, deleteTask.closest(".project-card"));
+    // project.removeTask(task);
+    // storeProject(project);
 
-    const oldProjectCard = deleteTask.closest(".project-card");
+    // const oldProjectCard = deleteTask.closest(".project-card");
 
-    const counter = oldProjectCard.querySelector(".counter");
-    const parentProject = projects[counter.dataset.id];
-    const projectContext = counter.dataset.context;
-    const newProjectCard = displayProjectCard(parentProject, projectContext);
-    if (newProjectCard) {
-      oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
-    } else {
-      oldProjectCard.remove();
-    }
-    updateCounters();
+    // const counter = oldProjectCard.querySelector(".counter");
+    // const parentProject = projects[counter.dataset.id];
+    // const projectContext = counter.dataset.context;
+    // const newProjectCard = displayProjectCard(parentProject, projectContext);
+    // if (newProjectCard) {
+    //   oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
+    // } else {
+    //   oldProjectCard.remove();
+    // }
+    // updateCounters();
   });
 
   cornerIcons.appendChild(editTask);
@@ -510,6 +499,73 @@ const displayTask = function (task, project) {
   container.appendChild(taskBody);
 
   return container;
+};
+
+const confirmDelete = function (task, project, card) {
+  const shadow = document.querySelector("#shadow");
+  shadow.classList.remove("hidden");
+
+  const confirmCard = document.createElement("div");
+  confirmCard.id = "confirm-card";
+
+  const confirmText = document.createElement("h3");
+  confirmText.textContent = `Deseja excluir a tarefa "${task.title}" do projeto ${project.name}?`;
+
+  const buttonContainer = document.createElement("div");
+  buttonContainer.classList.add("button-container");
+
+  const noButton = document.createElement("button");
+  noButton.textContent = "Cancelar";
+  noButton.classList.add("no");
+
+  const yesButton = document.createElement("button");
+  yesButton.textContent = "Excluir";
+  yesButton.classList.add("yes");
+
+  buttonContainer.appendChild(noButton);
+  buttonContainer.appendChild(yesButton);
+
+  confirmCard.appendChild(confirmText);
+  confirmCard.appendChild(buttonContainer);
+
+  const body = document.querySelector("body");
+  body.appendChild(confirmCard);
+
+  noButton.addEventListener("click", () => {
+    body.removeChild(confirmCard);
+    shadow.classList.add("hidden");
+    return;
+  });
+
+  shadow.addEventListener("click", (event) => {
+    event.stopPropagation();
+    if (confirmCard.parentNode === body) {
+      body.removeChild(confirmCard);
+    }
+    // shadow.classList.add("hidden");
+    return;
+  });
+
+  yesButton.addEventListener("click", () => {
+    project.removeTask(task);
+    storeProject(project);
+
+    const oldProjectCard = card;
+
+    const counter = oldProjectCard.querySelector(".counter");
+    const parentProject = projects[counter.dataset.id];
+    const projectContext = counter.dataset.context;
+    const newProjectCard = displayProjectCard(parentProject, projectContext);
+    if (newProjectCard) {
+      oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
+    } else {
+      oldProjectCard.remove();
+    }
+    updateCounters();
+    body.removeChild(confirmCard);
+    shadow.classList.add("hidden");
+    return;
+  });
 };
 
 const displayProjectCard = function (project, context) {
@@ -779,7 +835,8 @@ const printPage = () => {
   const shadow = document.createElement("div");
   shadow.id = "shadow";
   shadow.classList.add("hidden");
-  shadow.addEventListener("click", () => {
+  shadow.addEventListener("click", (event) => {
+    event.stopPropagation();
     shadow.classList.add("hidden");
     document.querySelectorAll(".form").forEach((element) => {
       element.classList.add("hidden");

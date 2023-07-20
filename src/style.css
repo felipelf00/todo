@@ -62,7 +62,8 @@ label {
   z-index: 4;
 }
 
-.form {
+.form,
+#confirm-card {
   position: absolute;
   z-index: 5;
   top: 50%;
@@ -229,6 +230,33 @@ ul {
 
 #add-new-task {
   display: block;
+}
+
+#confirm-card {
+  z-index: 5;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 25px;
+}
+
+.button-container button {
+  border: 0;
+  border-radius: 16px;
+  padding: 6px 12px;
+}
+
+.yes {
+  background: var(--button-color);
+  color: var(--background-color);
+}
+
+.no {
+  background: var(--sidebar-color);
+  color: var(--text-color-dark);
 }
 
 .project-card {
