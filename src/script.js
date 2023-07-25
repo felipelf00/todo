@@ -21,6 +21,15 @@ const newProject = (name) => {
 };
 
 const Task = (title, description, due, priority, notes, complete, project) => {
+  // function Task(title, description, due, priority, notes, complete, project) {
+  // this.title = title;
+  // this.description = description;
+  // this.due = due;
+  // this.priority = priority;
+  // this.notes = notes;
+  // this.complete = complete;
+  // this.project = project;
+
   const toggleComplete = function () {
     if (!this.complete) {
       this.complete = true;
@@ -28,6 +37,41 @@ const Task = (title, description, due, priority, notes, complete, project) => {
       this.complete = false;
     }
   };
+  const isDueToday = function () {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    const taskDueDate = new Date(this.due);
+
+    return (
+      currentDate.getUTCFullYear() === taskDueDate.getUTCFullYear() &&
+      currentDate.getUTCMonth() === taskDueDate.getUTCMonth() &&
+      currentDate.getUTCDate() === taskDueDate.getUTCDate()
+    );
+  };
+  const isDueThisWeek = function () {
+    const taskDueDate = new Date(this.due);
+    const utcDate = new Date(
+      taskDueDate.getUTCFullYear(),
+      taskDueDate.getUTCMonth(),
+      taskDueDate.getUTCDate()
+    );
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    const firstDay = new Date(
+      currentDate.setDate(currentDate.getDate() - currentDate.getDay())
+    );
+    const lastDay = new Date(
+      firstDay.getFullYear(),
+      firstDay.getMonth(),
+      firstDay.getDate() + 6
+    );
+
+    return utcDate >= firstDay && utcDate <= lastDay;
+  };
+
   return {
     title,
     description,
@@ -36,6 +80,8 @@ const Task = (title, description, due, priority, notes, complete, project) => {
     notes,
     complete,
     toggleComplete,
+    isDueToday,
+    isDueThisWeek,
   };
 };
 

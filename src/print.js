@@ -304,12 +304,27 @@ const createTaskForm = function () {
   blank.value = "";
   priority.appendChild(blank);
 
-  for (let i = 1; i <= 5; i++) {
-    const option = document.createElement("option");
-    option.value = i;
-    option.textContent = i;
-    priority.appendChild(option);
-  }
+  // for (let i = 1; i <= 5; i++) {
+  //   const option = document.createElement("option");
+  //   option.value = i;
+  //   option.textContent = i;
+  //   priority.appendChild(option);
+  // }
+
+  const high = document.createElement("option");
+  high.value = "alta";
+  high.textContent = "alta";
+  priority.appendChild(high);
+
+  const medium = document.createElement("option");
+  medium.value = "média";
+  medium.textContent = "média";
+  priority.appendChild(medium);
+
+  const low = document.createElement("option");
+  low.value = "baixa";
+  low.textContent = "baixa";
+  priority.appendChild(low);
 
   //--- Observações
   const notesLabel = document.createElement("label");
@@ -350,9 +365,6 @@ const createTaskForm = function () {
       activeProject,
       counter.dataset.context
     );
-
-    console.log(counter);
-    console.log(oldProjectCard);
 
     oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
     updateCounters();
@@ -415,6 +427,12 @@ const displayTask = function (task, project) {
     container.classList.toggle("expanded");
     expander.classList.toggle("clicked");
   });
+
+  if (task.priority === "alta") {
+    title.classList.add("high-priority");
+  } else {
+    title.classList.remove("high-priority");
+  }
 
   const cornerIcons = document.createElement("span");
   cornerIcons.classList.add("task-icons");
@@ -517,10 +535,12 @@ const confirmDelete = function (task, project, card) {
   const noButton = document.createElement("button");
   noButton.textContent = "Cancelar";
   noButton.classList.add("no");
+  noButton.classList.add("clickable");
 
   const yesButton = document.createElement("button");
   yesButton.textContent = "Excluir";
   yesButton.classList.add("yes");
+  yesButton.classList.add("clickable");
 
   buttonContainer.appendChild(noButton);
   buttonContainer.appendChild(yesButton);
@@ -625,7 +645,8 @@ const displayProjectCard = function (project, context) {
   switch (context) {
     case "today":
       project.tasks.forEach((task) => {
-        if (isDueToday(task)) {
+        // if (isDueToday(task)) {
+        if (task.isDueToday()) {
           projectBody.appendChild(displayTask(task, project, context));
           hasTasksToDisplay = true;
         }
@@ -636,7 +657,7 @@ const displayProjectCard = function (project, context) {
       break;
     case "thisWeek":
       project.tasks.forEach((task) => {
-        if (isDueThisWeek(task)) {
+        if (task.isDueThisWeek()) {
           projectBody.appendChild(displayTask(task, project, context));
           hasTasksToDisplay = true;
         }
@@ -735,22 +756,21 @@ const displayToday = function () {
     if (newProjectCard) {
       main.appendChild(newProjectCard);
     }
-    // main.appendChild(displayProjectCard(project, "today"));
   });
 };
 
-const isDueToday = function (task) {
-  const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0);
+// const isDueToday = function (task) {
+//   const currentDate = new Date();
+//   currentDate.setHours(0, 0, 0, 0);
 
-  const taskDueDate = new Date(task.due);
+//   const taskDueDate = new Date(task.due);
 
-  return (
-    currentDate.getUTCFullYear() === taskDueDate.getUTCFullYear() &&
-    currentDate.getUTCMonth() === taskDueDate.getUTCMonth() &&
-    currentDate.getUTCDate() === taskDueDate.getUTCDate()
-  );
-};
+//   return (
+//     currentDate.getUTCFullYear() === taskDueDate.getUTCFullYear() &&
+//     currentDate.getUTCMonth() === taskDueDate.getUTCMonth() &&
+//     currentDate.getUTCDate() === taskDueDate.getUTCDate()
+//   );
+// };
 
 const displayThisWeek = function () {
   const main = document.querySelector("#main");
@@ -799,28 +819,28 @@ const displayThisWeek = function () {
   });
 };
 
-const isDueThisWeek = function (task) {
-  const taskDueDate = new Date(task.due);
-  const utcDate = new Date(
-    taskDueDate.getUTCFullYear(),
-    taskDueDate.getUTCMonth(),
-    taskDueDate.getUTCDate()
-  );
+// const isDueThisWeek = function (task) {
+//   const taskDueDate = new Date(task.due);
+//   const utcDate = new Date(
+//     taskDueDate.getUTCFullYear(),
+//     taskDueDate.getUTCMonth(),
+//     taskDueDate.getUTCDate()
+//   );
 
-  const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0);
+//   const currentDate = new Date();
+//   currentDate.setHours(0, 0, 0, 0);
 
-  const firstDay = new Date(
-    currentDate.setDate(currentDate.getDate() - currentDate.getDay())
-  );
-  const lastDay = new Date(
-    firstDay.getFullYear(),
-    firstDay.getMonth(),
-    firstDay.getDate() + 6
-  );
+//   const firstDay = new Date(
+//     currentDate.setDate(currentDate.getDate() - currentDate.getDay())
+//   );
+//   const lastDay = new Date(
+//     firstDay.getFullYear(),
+//     firstDay.getMonth(),
+//     firstDay.getDate() + 6
+//   );
 
-  return utcDate >= firstDay && utcDate <= lastDay;
-};
+//   return utcDate >= firstDay && utcDate <= lastDay;
+// };
 
 const clearPage = () => {
   const body = document.querySelector("body");
@@ -887,14 +907,15 @@ const countTasks = function (id, context) {
       return projects[id].tasks.filter((task) => !task.complete).length;
     case "today":
       for (const task of projects[id].tasks) {
-        if (isDueToday(task) && !task.complete) {
+        if (task.isDueToday() && !task.complete) {
+          //alterado isDueToday para método
           totalTasks += 1;
         }
       }
       return totalTasks;
     case "thisWeek":
       for (const task of projects[id].tasks) {
-        if (isDueThisWeek(task) && !task.complete) {
+        if (task.isDueThisWeek() && !task.complete) {
           totalTasks += 1;
         }
       }

@@ -281,7 +281,9 @@ ul {
   height: 26px;
 }
 
-.add-button:hover {
+.add-button:hover,
+.yes:hover,
+.no:hover {
   transform: scale(1.02);
 }
 
@@ -367,11 +369,24 @@ ul {
 
 .task-header .left {
   margin-right: 34px;
+  position: relative;
+}
+
+.high-priority::after {
+  content: "!";
+  font-weight: 700;
+  color: darkred;
+  position: absolute;
+  /* left: 10px; */
+  right: 4px;
+  /* top: -1px; */
+  font-size: 17px;
 }
 
 .task-header .center {
   flex: 1;
   text-align: center;
+  position: relative;
 }
 
 .task-icons {
@@ -387,7 +402,7 @@ ul {
   font-size: 19px;
 }
 
-.material-icons:hover {
+.material-icons:not(.burger):hover {
   color: var(--header-color);
 }
 
