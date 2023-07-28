@@ -159,7 +159,7 @@ const loadProjects = function () {
       //   element.classList.remove("active");
       // });
 
-      activeProject = project;
+      activeProject = project; //obsoleto?
       displayProject(project);
 
       item.classList.add("active");
@@ -184,6 +184,8 @@ const loadProjects = function () {
 };
 
 let activeProject;
+let activeTask;
+let activeMode;
 
 // const selectProject = function (project) {
 //   const main = document.querySelector("main");
@@ -300,16 +302,10 @@ const createTaskForm = function () {
 
   const priority = document.createElement("select");
   priority.name = "priority";
+  priority.id = "priority";
   const blank = document.createElement("option");
   blank.value = "";
   priority.appendChild(blank);
-
-  // for (let i = 1; i <= 5; i++) {
-  //   const option = document.createElement("option");
-  //   option.value = i;
-  //   option.textContent = i;
-  //   priority.appendChild(option);
-  // }
 
   const high = document.createElement("option");
   high.value = "alta";
@@ -332,8 +328,8 @@ const createTaskForm = function () {
   notesLabel.textContent = "Observações: ";
 
   const notes = document.createElement("textarea");
-  notes.id = "description";
-  notes.name = "description";
+  notes.id = "notes";
+  notes.name = "notes";
   notes.rows = 4;
 
   //--- Submit
@@ -341,17 +337,27 @@ const createTaskForm = function () {
   const button = document.createElement("button");
   button.id = "add-new-task";
   button.classList.add("clickable");
-  button.textContent = "Adicionar tarefa";
+  button.textContent = "Salvar tarefa";
 
-  // --- Add task to project object
   button.addEventListener("click", () => {
-    activeProject.addTask(
-      title.value,
-      description.value,
-      due.value,
-      priority.value,
-      notes.value
-    );
+    if (activeMode === "new") {
+      // talvez não seja necessário usar modos, verificar se a task é vazia
+      activeProject.addTask(
+        title.value,
+        description.value,
+        due.value,
+        priority.value,
+        notes.value
+      );
+      console.log("criando nova task: " + title.value);
+    } else if (activeMode === "edit") {
+      activeTask.title = title.value;
+      activeTask.description = description.value;
+      activeTask.due = due.value;
+      activeTask.priority = priority.value;
+      activeTask.notes = notes.value;
+      console.log("atribuindo novos valores à tarefa");
+    }
 
     storeProject(activeProject);
 
@@ -370,16 +376,48 @@ const createTaskForm = function () {
     updateCounters();
 
     container.classList.add("hidden");
-    document.querySelector("#shadow").classList.add("hidden");
-
-    title.value = "";
-    description.value = "";
-    due.value = "";
-    priority.value = "";
-    notes.value = "";
+    document.getElementById("shadow").classList.add("hidden");
 
     updateCounters();
   });
+
+  // --- Add task to project object
+  // button.addEventListener("click", () => {
+  //   activeProject.addTask(
+  //     title.value,
+  //     description.value,
+  //     due.value,
+  //     priority.value,
+  //     notes.value
+  //   );
+
+  //   storeProject(activeProject);
+
+  //   const main = document.querySelector("#main");
+
+  //   const counter = main.querySelector(
+  //     `[data-id="${projects.indexOf(activeProject)}"]`
+  //   );
+  //   const oldProjectCard = counter.closest(".project-card");
+  //   const newProjectCard = displayProjectCard(
+  //     activeProject,
+  //     counter.dataset.context
+  //   );
+
+  //   oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
+  //   updateCounters();
+
+  //   container.classList.add("hidden");
+  //   document.querySelector("#shadow").classList.add("hidden");
+
+  //   title.value = "";
+  //   description.value = "";
+  //   due.value = "";
+  //   priority.value = "";
+  //   notes.value = "";
+
+  //   updateCounters();
+  // });
 
   container.appendChild(titleLabel);
   container.appendChild(title);
@@ -399,6 +437,81 @@ const createTaskForm = function () {
   container.appendChild(button);
 
   return container;
+};
+
+const saveTask = function () {
+  // activeProject = project;
+  const shadow = document.getElementById("shadow");
+  shadow.classList.remove("hidden");
+  const form = document.getElementById("new-task-form");
+  form.classList.remove("hidden");
+
+  const title = document.getElementById("task-title");
+  const description = document.getElementById("description");
+  const due = document.getElementById("due");
+  const priority = document.getElementById("priority");
+  const notes = document.getElementById("notes");
+
+  title.focus();
+
+  if (activeMode === "edit") {
+    title.value = activeTask.title;
+    description.value = activeTask.description;
+    due.value = activeTask.due;
+    priority.value = activeTask.priority;
+    notes.value = activeTask.notes;
+    console.log(
+      "preenchendo formulário com infos da tarefa: " + activeTask.title
+    );
+  } else {
+    title.value = "";
+    description.value = "";
+    due.value = "";
+    priority.value = "";
+    notes.value = "";
+    console.log("limpando formulário");
+  }
+
+  // const addTask = document.getElementById("add-new-task");
+
+  // addTask.addEventListener("click", () => {
+  //   if (mode === "new") {
+  //     // talvez não seja necessário usar modos, verificar se a task é vazia
+  //     project.addTask(
+  //       title.value,
+  //       description.value,
+  //       due.value,
+  //       priority.value,
+  //       notes.value
+  //     );
+  //     console.log("criando nova task: " + title.value);
+  //   } else if (mode === "edit") {
+  //     task.title = title.value;
+  //     task.description = description.value;
+  //     task.due = due.value;
+  //     task.priority = priority.value;
+  //     task.notes = notes.value;
+  //     console.log("atribuindo novos valores à tarefa");
+  //   }
+
+  //   storeProject(project);
+
+  //   const main = document.querySelector("#main");
+
+  //   const counter = main.querySelector(
+  //     `[data-id="${projects.indexOf(project)}"]`
+  //   );
+  //   const oldProjectCard = counter.closest(".project-card");
+  //   const newProjectCard = displayProjectCard(project, counter.dataset.context);
+
+  //   oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
+  //   updateCounters();
+
+  //   form.classList.add("hidden");
+  //   shadow.classList.add("hidden");
+
+  //   updateCounters();
+  // });
 };
 
 const displayTask = function (task, project) {
@@ -444,7 +557,7 @@ const displayTask = function (task, project) {
   // check.dataset.projectIndex = projects.indexOf(project); // maybe not necessary
 
   check.addEventListener("change", () => {
-    title.classList.toggle("completed");
+    title.cleditTassList.toggle("completed");
     task.toggleComplete();
     storeProject(project);
     updateCounters();
@@ -460,6 +573,14 @@ const displayTask = function (task, project) {
   editTask.classList.add("material-icons");
   editTask.classList.add("clickable");
 
+  editTask.addEventListener("click", () => {
+    activeProject = project;
+    activeTask = task;
+    console.log(activeTask);
+    activeMode = "edit";
+    saveTask();
+  });
+
   const deleteTask = document.createElement("span");
   deleteTask.textContent = "delete";
   deleteTask.classList.add("material-icons");
@@ -467,21 +588,6 @@ const displayTask = function (task, project) {
 
   deleteTask.addEventListener("click", () => {
     confirmDelete(task, project, deleteTask.closest(".project-card"));
-    // project.removeTask(task);
-    // storeProject(project);
-
-    // const oldProjectCard = deleteTask.closest(".project-card");
-
-    // const counter = oldProjectCard.querySelector(".counter");
-    // const parentProject = projects[counter.dataset.id];
-    // const projectContext = counter.dataset.context;
-    // const newProjectCard = displayProjectCard(parentProject, projectContext);
-    // if (newProjectCard) {
-    //   oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
-    // } else {
-    //   oldProjectCard.remove();
-    // }
-    // updateCounters();
   });
 
   cornerIcons.appendChild(editTask);
@@ -631,10 +737,13 @@ const displayProjectCard = function (project, context) {
   addTask.textContent = "+";
   addTask.classList.add("clickable");
   addTask.classList.add("add-button");
+
   addTask.addEventListener("click", () => {
-    document.querySelector("#new-task-form").classList.remove("hidden");
-    document.querySelector("#shadow").classList.remove("hidden");
+    // document.querySelector("#new-task-form").classList.remove("hidden");
+    // document.querySelector("#shadow").classList.remove("hidden");
     activeProject = project;
+    activeMode = "new";
+    saveTask();
   });
 
   const projectBody = document.createElement("div");
