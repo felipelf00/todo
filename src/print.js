@@ -274,6 +274,12 @@ const createTaskForm = function () {
   title.id = "task-title";
   title.name = "task-title";
   title.type = "text";
+  title.required = true;
+
+  const errorMsg = document.createElement("span");
+  errorMsg.classList.add("error-message");
+  errorMsg.classList.add("hidden");
+  errorMsg.textContent = "Favor informar o título da tarefa";
 
   //--- Descrição
   const descriptionLabel = document.createElement("label");
@@ -340,6 +346,13 @@ const createTaskForm = function () {
   button.textContent = "Salvar tarefa";
 
   button.addEventListener("click", () => {
+    if (!title.checkValidity()) {
+      errorMsg.classList.remove("hidden");
+      return;
+    } else {
+      errorMsg.classList.add("hidden");
+    }
+
     if (activeMode === "new") {
       // talvez não seja necessário usar modos, verificar se a task é vazia
       activeProject.addTask(
@@ -349,14 +362,12 @@ const createTaskForm = function () {
         priority.value,
         notes.value
       );
-      console.log("criando nova task: " + title.value);
     } else if (activeMode === "edit") {
       activeTask.title = title.value;
       activeTask.description = description.value;
       activeTask.due = due.value;
       activeTask.priority = priority.value;
       activeTask.notes = notes.value;
-      console.log("atribuindo novos valores à tarefa");
     }
 
     storeProject(activeProject);
@@ -381,46 +392,9 @@ const createTaskForm = function () {
     updateCounters();
   });
 
-  // --- Add task to project object
-  // button.addEventListener("click", () => {
-  //   activeProject.addTask(
-  //     title.value,
-  //     description.value,
-  //     due.value,
-  //     priority.value,
-  //     notes.value
-  //   );
-
-  //   storeProject(activeProject);
-
-  //   const main = document.querySelector("#main");
-
-  //   const counter = main.querySelector(
-  //     `[data-id="${projects.indexOf(activeProject)}"]`
-  //   );
-  //   const oldProjectCard = counter.closest(".project-card");
-  //   const newProjectCard = displayProjectCard(
-  //     activeProject,
-  //     counter.dataset.context
-  //   );
-
-  //   oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
-  //   updateCounters();
-
-  //   container.classList.add("hidden");
-  //   document.querySelector("#shadow").classList.add("hidden");
-
-  //   title.value = "";
-  //   description.value = "";
-  //   due.value = "";
-  //   priority.value = "";
-  //   notes.value = "";
-
-  //   updateCounters();
-  // });
-
   container.appendChild(titleLabel);
   container.appendChild(title);
+  container.appendChild(errorMsg);
 
   container.appendChild(descriptionLabel);
   container.appendChild(description);
@@ -471,47 +445,6 @@ const saveTask = function () {
     notes.value = "";
     console.log("limpando formulário");
   }
-
-  // const addTask = document.getElementById("add-new-task");
-
-  // addTask.addEventListener("click", () => {
-  //   if (mode === "new") {
-  //     // talvez não seja necessário usar modos, verificar se a task é vazia
-  //     project.addTask(
-  //       title.value,
-  //       description.value,
-  //       due.value,
-  //       priority.value,
-  //       notes.value
-  //     );
-  //     console.log("criando nova task: " + title.value);
-  //   } else if (mode === "edit") {
-  //     task.title = title.value;
-  //     task.description = description.value;
-  //     task.due = due.value;
-  //     task.priority = priority.value;
-  //     task.notes = notes.value;
-  //     console.log("atribuindo novos valores à tarefa");
-  //   }
-
-  //   storeProject(project);
-
-  //   const main = document.querySelector("#main");
-
-  //   const counter = main.querySelector(
-  //     `[data-id="${projects.indexOf(project)}"]`
-  //   );
-  //   const oldProjectCard = counter.closest(".project-card");
-  //   const newProjectCard = displayProjectCard(project, counter.dataset.context);
-
-  //   oldProjectCard.parentNode.replaceChild(newProjectCard, oldProjectCard);
-  //   updateCounters();
-
-  //   form.classList.add("hidden");
-  //   shadow.classList.add("hidden");
-
-  //   updateCounters();
-  // });
 };
 
 const displayTask = function (task, project) {
@@ -970,6 +903,7 @@ const printPage = () => {
     document.querySelectorAll(".form").forEach((element) => {
       element.classList.add("hidden");
     });
+    document.querySelector(".error-message").classList.add("hidden");
   });
 
   const main = document.createElement("main");

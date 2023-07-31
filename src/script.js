@@ -21,15 +21,6 @@ const newProject = (name) => {
 };
 
 const Task = (title, description, due, priority, notes, complete, project) => {
-  // function Task(title, description, due, priority, notes, complete, project) {
-  // this.title = title;
-  // this.description = description;
-  // this.due = due;
-  // this.priority = priority;
-  // this.notes = notes;
-  // this.complete = complete;
-  // this.project = project;
-
   const toggleComplete = function () {
     if (!this.complete) {
       this.complete = true;
