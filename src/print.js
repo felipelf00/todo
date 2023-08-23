@@ -490,7 +490,7 @@ const displayTask = function (task, project) {
   // check.dataset.projectIndex = projects.indexOf(project); // maybe not necessary
 
   check.addEventListener("change", () => {
-    title.cleditTassList.toggle("completed");
+    title.classList.toggle("completed");
     task.toggleComplete();
     storeProject(project);
     updateCounters();
